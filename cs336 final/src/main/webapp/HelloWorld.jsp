@@ -84,6 +84,20 @@
 			</select>&nbsp;<br> <input type="submit" value="submit">
 		</form>
 	<br>
+	
+	<br>
+		<form method="get" action="sellsNewBeer.jsp">
+			<table>
+				<tr>    
+					<td>Username</td><td><input type="text" name="barvalia"></td>
+				</tr>
+				<tr>
+					<td>Password</td><td><input type="text" name="beer"></td>
+				</tr>
+			</table>
+			<input type="submit" value="Login">
+		</form>
+	<br>
 
 </body>
 </html>
