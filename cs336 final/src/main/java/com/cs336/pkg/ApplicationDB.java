@@ -5,15 +5,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ApplicationDB {
-	
-	public ApplicationDB(){
-		
+	public ApplicationDB() {
 	}
 
 	public Connection getConnection(){
 		
 		//Create a connection string
-		String connectionUrl = "jdbc:mysql://localhost:3306/BarBeerDrinkerSample";
+		String connectionUrl = "jdbc:mysql://localhost:3306/mysql";
 		Connection connection = null;
 		
 		try {
