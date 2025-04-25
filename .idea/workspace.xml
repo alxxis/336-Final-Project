@@ -2,39 +2,70 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="336-final-project" />
+      <artifact name="336-website:war exploded" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eeef199d-76e4-4907-a2d8-7364b6027834" name="Changes" comment="moved around files" />
+    <list default="true" id="4a043a75-9c73-4b56-b9f1-4d2ae0593f5e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.settings/.jsdtscope" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.settings/org.eclipse.wst.common.component" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.settings/org.eclipse.wst.common.project.facet.core.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.settings/org.eclipse.wst.jsdt.ui.superType.container" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/.settings/org.eclipse.wst.jsdt.ui.superType.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/java/com/cs336/pkg/ApplicationDB.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/java/com/cs336/pkg/Student.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/HelloWorld.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/WEB-INF/lib/mysql-connector-java-5.1.49-bin.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/WEB-INF/web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/index.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/loginHandler.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/logout.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/newBarBeerPrice.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/query.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/sellsNewBeer.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/show.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs336 final/src/main/webapp/show2.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/336_final_project/HelloWorld.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/336_final_project/index.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/336_final_project/loginHandler.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/336_final_project/logout.jsp" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="azm" />
-      </map>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
     </option>
+  </component>
+  <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;fwakks&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "fwakks"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/alxxis/336-Final-Project.git&quot;,
-    &quot;accountId&quot;: &quot;aa2d53cf-88c3-43a3-b768-86392ee2b894&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/alxxis/336-Final-Project.git",
+    "accountId": "aa2d53cf-88c3-43a3-b768-86392ee2b894"
   }
-}</component>
+}]]></component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
     <option name="FILTER_WARNINGS" value="false" />
@@ -43,52 +74,54 @@
     <option name="CUSTOM_FILTER" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 5
+  &quot;associatedIndex&quot;: 0
 }</component>
-  <component name="ProjectId" id="2vqDlslxiEdZa0j0Mnx26amZXZS" />
+  <component name="ProjectId" id="2wCVVvuyFPa30VM0kRpl0v40GEz" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "Tomcat Server.MyWebApp.executor": "Run",
     "Tomcat Server.Tomcat 9.0.104.executor": "Run",
-    "Tomcat Server.Unnamed.executor": "Run",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Akshay/Documents/336-Final-Project/cs336 final/src/main/webapp",
+    "last_opened_file_path": "C:/Users/Akshay/Documents/336-Final-Project",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Artifacts",
+    "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Akshay\Documents\336-website\src\main\webapp" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Akshay\Documents\336-Final-Project\cs336 final\src\main\webapp" />
+      <recent name="C:\Users\Akshay\Documents\336-website\src\main\webapp\WEB-INF\lib" />
+      <recent name="C:\Users\Akshay\Documents\336-website\src\main\webapp" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="MyWebApp" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.104" ALTERNATIVE_JRE_ENABLED="false">
+    <configuration name="Tomcat 9.0.104" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.104" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
-        <artifact name="336-final-project">
+        <artifact name="336-website:war exploded">
           <settings>
-            <option name="CONTEXT_PATH" value="/336_final_project" />
+            <option name="CONTEXT_PATH" value="/336_website_war_exploded" />
           </settings>
         </artifact>
       </deployment>
       <server-settings>
-        <option name="BASE_DIRECTORY_NAME" value="ff63f829-bd1b-45dd-bad7-2a52d612b4cc" />
-        <option name="HTTP_PORT" value="8081" />
+        <option name="BASE_DIRECTORY_NAME" value="c0b97798-10b9-4a88-9cfe-81061c676b74" />
       </server-settings>
       <predefined_log_file enabled="true" id="Tomcat" />
       <predefined_log_file enabled="true" id="Tomcat Catalina" />
@@ -96,7 +129,7 @@
       <predefined_log_file id="Tomcat Host Manager" />
       <predefined_log_file id="Tomcat Localhost Access" />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="65478" />
+        <option name="DEBUG_PORT" value="60730" />
       </RunnerSettings>
       <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
         <option name="USE_ENV_VARIABLES" value="true" />
@@ -160,9 +193,7 @@
       </ConfigurationWrapper>
       <method v="2">
         <option name="Make" enabled="true" />
-        <option name="BuildArtifacts" enabled="true">
-          <artifact name="336-final-project" />
-        </option>
+        <option name="BuildArtifacts" enabled="false" />
       </method>
     </configuration>
   </component>
@@ -177,37 +208,18 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="eeef199d-76e4-4907-a2d8-7364b6027834" name="Changes" comment="" />
-      <created>1744863864299</created>
+      <changelist id="4a043a75-9c73-4b56-b9f1-4d2ae0593f5e" name="Changes" comment="" />
+      <created>1745545575000</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1744863864299</updated>
-      <workItem from="1744863865413" duration="5805000" />
+      <updated>1745545575000</updated>
+      <workItem from="1745545576240" duration="2405000" />
+      <workItem from="1745585138673" duration="1533000" />
+      <workItem from="1745587092021" duration="53000" />
     </task>
-    <task id="LOCAL-00001" summary="moved around files">
-      <option name="closed" value="true" />
-      <created>1744869590502</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1744869590502</updated>
-    </task>
-    <task id="LOCAL-00002" summary="moved around files">
-      <option name="closed" value="true" />
-      <created>1744869634821</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1744869634821</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="moved around files" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved around files" />
   </component>
 </project>

@@ -13,20 +13,12 @@
 
 <body>
 
-
-<br>
-<form method="get" action="loginHandler.jsp">
-    <table>
-        <tr>
-            <td>Username</td><td><input type="text" name="usernameField"></td>
-        </tr>
-        <tr>
-            <td>Password</td><td><input type="password" name="passwordField"></td>
-        </tr>
-    </table>
-    <input type="submit" value="Login">
+<!-- the usual HTML way -->
+<%String username = (String) session.getAttribute("username");
+out.print("Hello " + username);%> <!-- output the same thing, but using
+	                                      jsp programming -->
+<form action="logout.jsp" method="post">
+    <button name="logout" value="logout">Logout</button>
 </form>
-<br>
 
-</body>
 </html>

@@ -3,7 +3,8 @@
 <!--Import some libraries that have classes that we need -->
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
-<%@ page import="com.cs336.pkg.*"%>
+<%@ page import="com.cs336.pkg.ApplicationDB" %>
+<%--<%@ page import="main.java.com.cs336.pkg.ApplicationDB" %>--%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -28,7 +29,7 @@
 
 
 //        Make an insert statement for the Sells table:
-        String select = ("SELECT username, password FROM user WHERE username = ?  AND password = ?");
+        String select = ("SELECT username, password FROM application.users WHERE username = ?  AND password = ?");
         //Create a Prepared SQL statement allowing you to introduce the parameters of the query
         PreparedStatement ps = con.prepareStatement(select);
 
@@ -38,21 +39,25 @@
         //Run the query against the DB
         ResultSet rs = ps.executeQuery();
 
-        if (!rs.next()) {
+        if (rs.isBeforeFirst()) {
+            rs.next();
+//            out.print(rs.getString("username"));
+//
+//            out.print(rs.getString("password"));
             session.setAttribute("username",username);
+            response.sendRedirect("HelloUser.jsp");
         }
         else {
-            response.redirect("http://localhost:8081/336_final_project/");
+            out.println("Invalid password <a href='index.jsp'>try again</a>");
         }
 
         //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
         con.close();
 
-        out.print("Insert succeeded!");
+//        out.print("Insert succeeded!");
 
     } catch (Exception ex) {
         out.print(ex);
-        out.print("Insert failed :()");
     }
 %>
 </body>

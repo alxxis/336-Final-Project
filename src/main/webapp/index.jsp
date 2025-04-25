@@ -15,7 +15,7 @@
 
 
 <br>
-<form method="get" action="loginHandler.jsp">
+<form method="Post" action="loginHandler.jsp">
     <table>
         <tr>
             <td>Username</td><td><input type="text" name="usernameField"></td>
