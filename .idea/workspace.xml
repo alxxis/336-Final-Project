@@ -10,10 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a043a75-9c73-4b56-b9f1-4d2ae0593f5e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/ApplicationDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/ApplicationDB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,12 +204,24 @@
       <workItem from="1745585138673" duration="1533000" />
       <workItem from="1745587092021" duration="53000" />
       <workItem from="1745847323391" duration="1152000" />
-      <workItem from="1746207899459" duration="1516000" />
+      <workItem from="1746207899459" duration="2249000" />
+      <workItem from="1746282534076" duration="3918000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
