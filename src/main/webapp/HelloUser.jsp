@@ -16,7 +16,16 @@
 <!-- the usual HTML way -->
 <%String username = (String) session.getAttribute("username");
 out.print("Hello " + username);%> <!-- output the same thing, but using
+
+
 	                                      jsp programming -->
+
+<form action="get-user" method="get">
+    <input type="text" name="username" />
+    <button type="submit">Submit</button>
+</form>
+
+
 <form action="logout.jsp" method="post">
     <button name="logout" value="logout">Logout</button>
 </form>
