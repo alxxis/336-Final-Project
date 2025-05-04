@@ -15,7 +15,7 @@ public class UsersService {
     }
 
 
-    public Optional<Users> getUser(String username){
+    public Users getUser(String username){
         String select = ("SELECT * FROM application.users WHERE username = ?");
         //Create a Prepared SQL statement allowing you to introduce the parameters of the query
         try{
@@ -31,14 +31,40 @@ public class UsersService {
 
             System.out.println("STUDENT OBJECT " + username + " " + password + " " + firstName + " " + lastName + " " + email + " " + role);
             Users user = new Users(username,password,firstName,lastName,email,role);
-            return Optional.of(user);
+            return user;
         }
+
+
 
         catch(SQLException e){
             System.out.println(e);
-            return Optional.empty();
+            return null;
 
         }
+
+
+    }
+    public List<Airport>getAirports(){
+        String select = ("SELECT * FROM application.airport");
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ResultSet rs = ps.executeQuery();
+            List<Airport> airports = new ArrayList<>();
+            while (rs.next()) {
+                String airportId = rs.getString(1);
+                String airportName = rs.getString(2);
+                String airportCity = rs.getString(3);
+                String airportCountry = rs.getString(4);
+                Airport airport = new Airport(airportId,airportName,airportCity,airportCountry);
+                airports.add(airport);
+            }
+            return airports;
+        }
+        catch (SQLException e){
+            return null;
+        }
+
+
 
     }
 }
