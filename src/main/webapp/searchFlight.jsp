@@ -11,19 +11,22 @@
 <%@ page import="javax.sql.*" %>
 
 <%
-    // Database connection variables
-    Connection conn = null;
-    Statement stmt = null;
-    ResultSet rs = null;
+    // Load all airport options
+    UsersService service = new UsersService();
+    List<Airport> airports = service.getAirports();
 
-    try {
-        Class.forName("com.mysql.jdbc.Driver");
-        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306", "Root", "IRrRI5U40Qqc$3SJ");
+    // Get selected value from form submission
+    String selected = request.getParameter("aircraft");
+    Airport selectedAirport = null;
 
-        // Step 3: Create SQL query
-        String sql = "SELECT name FROM airport ORDER BY name";
-        stmt = conn.createStatement();
-        rs = stmt.executeQuery(sql);
+    if ("POST".equalsIgnoreCase(request.getMethod()) && selected != null) {
+        for (Airport a : airports) {
+            if (a.getName().equals(selected)) {
+                selectedAirport = a;
+                break;
+            }
+        }
+    }
 %>
 <html>
 <head>
@@ -32,17 +35,27 @@
 <body>
     <h2>Search for Flights</h2>
 
-    <select name="flightsFrom">
-        <option value="">Flights from: </option>
-        <%
-            while (rs.next()) {
-                String name = rs.getString("name");
-        %>
-        <option value="<%= name %>"><%= name %></option>
-        <%
-            }
-        %>
-    </select>
+    <form method="post">
+        <label for="aircraft">Select Airport:</label>
+        <select name="aircraft" id="aircraft">
+            <% for (Airport a : airports) { %>
+            <option value="<%= a.getName() %>" <%= a.getName().equals(selected) ? "selected" : "" %>>
+                <%= a.getName() %>
+            </option>
+            <% } %>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <%
+        if (selectedAirport != null) {
+    %>
+    <h2>Selected Airport Details</h2>
+    <p>ID: <%= selectedAirport.getAirportID() %></p>
+    <p>Name: <%= selectedAirport.getName() %></p>
+    <%
+        }
+    %>
     <input type="submit" value="Submit">
 
     <label for="from">From:</label>
@@ -76,6 +89,44 @@
       <option value="threeDays">3 Days</option>
     </select>
     <input type="submit">
+
+    <br>
+    <p>Sort By: </p>
+    <input type="radio" id="priceAsc" name="sorting" value="priceAsc">
+    <label for="priceAsc">Price Ascending</label>
+    <input type="radio" id="priceDesc" name="sorting" value="priceDesc">
+    <label for="priceDesc">Price Descending</label>
+    <input type="radio" id="takeAsc" name="sorting" value="takeAsc">
+    <label for="takeAsc">Takeoff Time Ascending</label>
+    <input type="radio" id="takeDesc" name="sorting" value="takeDesc">
+    <label for="takeDesc">Takeoff Time Descending</label>
+    <input type="radio" id="landingAsc" name="sorting" value="landingAsc">
+    <label for="landingAsc">Landing Time Ascending</label>
+    <input type="radio" id="landingDesc" name="sorting" value="landingDesc">
+    <label for="landingDesc">Landing Time Descending</label>
+    <input type="radio" id="durationAsc" name="sorting" value="durationAsc">
+    <label for="durationAsc">Duration of Flight Ascending</label>
+    <input type="radio" id="durationDesc" name="sorting" value="durationDesc">
+    <label for="durationDesc">Duration of Flight Descending</label>
+
+    <br>
+
+    <p>Filter By:</p>
+
+    <label for="maxPrice">Max Price: </label>
+    <input type="number" id="maxPrice" name="maxPrice">
+    <label for="maxStops">Max Number of Stops: </label>
+    <input type="number" id="maxStops" name="maxStops">
+    <p>Airline: </p>
+    <select name="airline" id="airline">
+        <option value="EWR">Newark International Airport</option>
+        <option value="JFK">John F. Kennedy International Airport</option>
+    </select>
+    <label for="takeoffAfter">Takeoff Time After:</label>
+    <input type="time" id="takeoffAfter" name="takeoffAfter">
+    <label for="landingBefore">Landing Time Before:</label>
+    <input type="time" id="landingBefore" name="landingBefore">
+    <input type="submit" value="Submit">
 
 </body>
 </html>
