@@ -13,20 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a043a75-9c73-4b56-b9f1-4d2ae0593f5e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Aircraft.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Airline.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Airport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Flight.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Questions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Replies.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Ticket.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/TicketInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersServlet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/HelloUser.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/HelloUser.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,7 +80,7 @@
     "Tomcat Server.Tomcat 9.0.104.executor": "Run",
     "git-widget-placeholder": "azm-2",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Akshay/Documents/336-Final-Project",
+    "last_opened_file_path": "C:/Users/Akshay/Documents/336-Final-Project/src/main/webapp",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -112,6 +99,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Akshay\Documents\336-Final-Project\src\main\webapp" />
       <recent name="C:\Users\Akshay\Documents\336-website\src\main\webapp" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -231,7 +219,7 @@
       <workItem from="1746207899459" duration="1516000" />
       <workItem from="1746306275638" duration="12269000" />
       <workItem from="1746386027669" duration="681000" />
-      <workItem from="1746387013280" duration="8553000" />
+      <workItem from="1746387013280" duration="13296000" />
     </task>
     <servers />
   </component>
