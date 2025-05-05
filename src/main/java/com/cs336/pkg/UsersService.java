@@ -33,17 +33,29 @@ public class UsersService {
             Users user = new Users(username,password,firstName,lastName,email,role);
             return user;
         }
-
-
-
         catch(SQLException e){
             System.out.println(e);
             return null;
 
         }
-
-
     }
+
+    public void addUser(String username, String password, String firstName, String lastName, String email, String role){
+        String insert = ("INSERT INTO application.users VALUES (?,?,?,?,?,?)");
+        try {
+            PreparedStatement ps = con.prepareStatement(insert);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, firstName);
+            ps.setString(4, lastName);
+            ps.setString(5, email);
+            ps.setString(6, role);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+    }
+
     public List<Airport>getAirports(){
         String select = ("SELECT * FROM application.airport");
         try {
@@ -63,8 +75,28 @@ public class UsersService {
         catch (SQLException e){
             return null;
         }
-
-
-
     }
+    public List<Users> getAllCustomersAndReps(){
+        String select = ("SELECT * FROM application.customers WHERE role <> 'admin");
+        List<Users> users = new ArrayList<>();
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String username = rs.getString(1);
+                String password = rs.getString(2);
+                String firstName = rs.getString(3);
+                String lastName = rs.getString(4);
+                String email = rs.getString(5);
+                String role = rs.getString(6);
+                Users user = new Users(username,password,firstName,lastName,email,role);
+                users.add(user);
+            }
+
+        }catch(SQLException e){
+            return null;
+        }
+        return users;
+    }
+
 }
