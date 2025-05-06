@@ -8,10 +8,14 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Hi Beer World</title>
+    <title>Dashboard</title>
+
+    <%UsersService service = new UsersService();
+    out.print(service.getHeader());%>
 </head>
 
 <body>
+
 
 <!-- the usual HTML way -->
 <%String username = (String) session.getAttribute("username");

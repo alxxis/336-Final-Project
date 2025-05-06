@@ -1,19 +1,16 @@
 package com.cs336.pkg;
 
-import java.io.*;
 import java.util.*;
 import java.sql.*;
-import java.util.Optional;
 
 public class UsersService {
-    private final ApplicationDB db;
-    private final Connection con;
+    private ApplicationDB db;
+    private Connection con;
 
     public  UsersService() {
         db = new ApplicationDB();
         con = db.getConnection();
     }
-
 
     public Users getUser(String username){
         String select = ("SELECT * FROM application.users WHERE username = ?");
@@ -28,15 +25,158 @@ public class UsersService {
             String lastName = rs.getString(4);
             String email = rs.getString(5);
             String role = rs.getString(6);
-
-            System.out.println("STUDENT OBJECT " + username + " " + password + " " + firstName + " " + lastName + " " + email + " " + role);
             Users user = new Users(username,password,firstName,lastName,email,role);
             return user;
         }
         catch(SQLException e){
-            System.out.println(e);
+            e.printStackTrace();
             return null;
 
+        }
+    }
+    public String getHeader(){
+        return "<ul>\n" +
+                "        <li><a href=\"HelloUser.jsp\">Dashboard</a></li>\n" +
+                "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n" +
+                "        <li><a href=\"searchFlight.jsp\">Search Flights</a></li>\n" +
+                "        <li><a href=\"questions.jsp\">Questions</a></li>\n" +
+                "    </ul>";
+    }
+  public void updateUser(String usernameOriginal, String username, String password, String firstName, String lastName, String email, String role){
+        String update = ("UPDATE application.users SET username = ? , password = ?, firstName = ?, lastName = ?, email = ?, role = ? WHERE username = ?");
+        try {
+            PreparedStatement ps = con.prepareStatement(update);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, firstName);
+            ps.setString(4, lastName);
+            ps.setString(5, email);
+            ps.setString(6, role);
+            ps.setString(7, usernameOriginal);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+    public List<Questions> getAllQuestions(){
+        String select = "SELECT * FROM questions";
+        List<Questions> questions = new ArrayList<>();
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int questionId = rs.getInt(1);
+                String author = rs.getString(2);
+                String messageContent = rs.getString(3);
+                Timestamp timestamp = rs.getTimestamp(4);
+                Questions question = new Questions(questionId,author,messageContent,timestamp);
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return questions;
+    }
+
+    public String getQuestion(int questionId){
+        String select = "SELECT * FROM questions WHERE qID = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setInt(1,questionId);
+            ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getString(3);
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    public void addQuestion(String author, String messageContent, String timestamp){
+        String insert = ("INSERT INTO application.questions (author, messageContent,messageTimeStamp) VALUES (?,?,?)");
+        try {
+            PreparedStatement ps = con.prepareStatement(insert);
+            ps.setString(1, author);
+            ps.setString(2, messageContent);
+            ps.setString(3, timestamp);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+    }
+    public List<Questions> getAllQuestions(String search){
+        String select = "SELECT * FROM questions q LEFT JOIN replies r ON q.qID = r.qID WHERE q.messageContent LIKE ? OR r.messageContent LIKE ?";
+        List<Questions> questions = new ArrayList<>();
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setString(1, "%"+search+"%");
+            ps.setString(2, "%"+search+"%");
+            System.out.println(ps.toString());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int questionId = rs.getInt(1);
+                String author = rs.getString(2);
+                String messageContent = rs.getString(3);
+                Timestamp timestamp = rs.getTimestamp(4);
+                Questions question = new Questions(questionId,author,messageContent,timestamp);
+                questions.add(question);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return questions;
+    }
+
+    public List<Replies> getReplies(int questionId){
+        String select = "SELECT * FROM application.replies WHERE qID = ?";
+        List<Replies> replies = new ArrayList<>();
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setInt(1, questionId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int replierId = rs.getInt(1);
+                String author = rs.getString(2);
+                String messageContent = rs.getString(4);
+                Timestamp timestamp = rs.getTimestamp(5);
+                Replies reply = new Replies(replierId,author,questionId,messageContent,timestamp);
+                replies.add(reply);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+        return replies;
+    }
+
+    public void addReply(String author, int qID, String messageContent, String timestamp){
+        String insert = "INSERT INTO application.replies (author, qID, messageContent, messageTimestamp) VALUES (?,?,?,?)";
+        try{
+            PreparedStatement ps = con.prepareStatement(insert);
+            ps.setString(1, author);
+            ps.setInt(2, qID);
+            ps.setString(3, messageContent);
+            ps.setString(4, timestamp);
+            ps.executeUpdate();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteUser(String username){
+        String delete = ("DELETE FROM application.users WHERE username = ?");
+        try {
+            PreparedStatement ps = con.prepareStatement(delete);
+            ps.setString(1, username);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,7 +217,7 @@ public class UsersService {
         }
     }
     public List<Users> getAllCustomersAndReps(){
-        String select = ("SELECT * FROM application.customers WHERE role <> 'admin");
+        String select = ("SELECT * FROM application.users WHERE role <> 'admin'");
         List<Users> users = new ArrayList<>();
         try {
             PreparedStatement ps = con.prepareStatement(select);
@@ -94,6 +234,7 @@ public class UsersService {
             }
 
         }catch(SQLException e){
+            e.printStackTrace();
             return null;
         }
         return users;

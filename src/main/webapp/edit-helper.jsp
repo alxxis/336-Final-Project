@@ -23,7 +23,7 @@ String role = request.getParameter("role");
 
   UsersService service = new UsersService();
   service.addUser(username,password,firstName,lastName,email,role);
-  response.sendRedirect("editUser.jsp");
+  response.sendRedirect("viewUsers.jsp");
 %>
 
 </body>

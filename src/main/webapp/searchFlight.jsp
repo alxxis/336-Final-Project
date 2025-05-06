@@ -50,13 +50,14 @@
 <html>
 <head>
     <title>Search for Flights</title>
+    <%out.print(service.getHeader());%>
 </head>
 <body>
 <h2>Search for Flights</h2>
 
 <form method="post">
     <label for="dep_airport">Departure Airport:</label>
-    <select name="dep_airport" id="dep_airport">
+    <select name="dep_airport" id="dep_airport" required>
         <% for (Airport a : airports) { %>
         <option value="<%= a.getName() %>" <%= a.getName().equals(dep_airport) ? "selected" : "" %>>
             <%= a.getName() %>
@@ -64,7 +65,7 @@
         <% } %>
     </select>
     <label for="arv_airport">Arrival Airport:</label>
-    <select name="arv_airport" id="arv_airport">
+    <select name="arv_airport" id="arv_airport" required>
         <% for (Airport a : airports) { %>
         <option value="<%= a.getName() %>" <%= a.getName().equals(arv_airport) ? "selected" : "" %>>
             <%= a.getName() %>
@@ -72,26 +73,24 @@
         <% } %>
     </select>
 
-    <label for="deptDate">Departure Date:</label>
-    <input type="date" id="deptDate" name="deptDate">
+    <label for="deptDate">Departure Date:</label >
+    <input type="date" id="deptDate" name="deptDate" required>
 
     <label for="arrivalDate">Arrival Date:</label>
-    <input type="date" id="arrivalDate" name="arrivalDate">
+    <input type="date" id="arrivalDate" name="arrivalDate" required>
 
-    <input type="radio" id="oneWay" name="oneOrRound" value="oneWay">
+    <input type="radio" id="oneWay" name="oneOrRound" value="oneWay" required>
     <label for="oneWay">One Way</label>
     <input type="radio" id="roundTrip" name="oneOrRound" value="roundTrip">
     <label for="roundTrip">Round Trip</label>
 
     <label for="flexibility">Flexibility:</label>
-    <select name="flexibility" id="flexibility">
+    <select name="flexibility" id="flexibility" required>
         <option value="zeroDays">0 Days</option>
         <option value="oneDay">1 Day</option>
         <option value="twoDays">2 Days</option>
         <option value="threeDays">3 Days</option>
     </select>
-
-
 
     <button type="submit">Submit</button>
 </form>

@@ -53,7 +53,7 @@
             response.sendRedirect("HelloUser.jsp");
         }
         else {
-            out.println("Invalid password <a href='index.jsp'>try again</a>");
+            out.print("Invalid password <a href='index.jsp'>try again</a>");
         }
 
         //Close the connection. Don't forget to do it, otherwise you're keeping the resources of the server allocated.
