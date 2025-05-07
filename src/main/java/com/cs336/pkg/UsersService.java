@@ -12,6 +12,17 @@ public class UsersService {
         con = db.getConnection();
     }
 
+
+    // gets the nav bar for the website
+    public String getHeader(){
+        return "<ul>\n" +
+                "        <li><a href=\"HelloUser.jsp\">Dashboard</a></li>\n" +
+                "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n" +
+                "        <li><a href=\"searchFlight.jsp\">Search Flights</a></li>\n" +
+                "        <li><a href=\"questions.jsp\">Questions</a></li>\n" +
+                "    </ul>";
+    }
+
     public Users getUser(String username){
         String select = ("SELECT * FROM application.users WHERE username = ?");
         //Create a Prepared SQL statement allowing you to introduce the parameters of the query
@@ -34,14 +45,7 @@ public class UsersService {
 
         }
     }
-    public String getHeader(){
-        return "<ul>\n" +
-                "        <li><a href=\"HelloUser.jsp\">Dashboard</a></li>\n" +
-                "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n" +
-                "        <li><a href=\"searchFlight.jsp\">Search Flights</a></li>\n" +
-                "        <li><a href=\"questions.jsp\">Questions</a></li>\n" +
-                "    </ul>";
-    }
+
   public void updateUser(String usernameOriginal, String username, String password, String firstName, String lastName, String email, String role){
         String update = ("UPDATE application.users SET username = ? , password = ?, firstName = ?, lastName = ?, email = ?, role = ? WHERE username = ?");
         try {
@@ -238,6 +242,35 @@ public class UsersService {
             return null;
         }
         return users;
+    }
+
+    public List<Flight> getAllAirportFlights(String airportID, String dayOfWeek){
+        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND fd.depatureDay = ?;";
+        List<Flight> flights = new ArrayList<>();
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1, airportID);
+            ps.setString(2,airportID);
+            ps.setString(3,dayOfWeek);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String airlineID = rs.getString(1);
+                int flightNum = rs.getInt(2);
+                int aircraftID = rs.getInt(3);
+                boolean isDomestic = rs.getBoolean(4);
+                String departureAirport = rs.getString(5);
+                Time departureTime = rs.getTime(6);
+                String arrivalAirport = rs.getString(7);
+                Time arrivalTime = rs.getTime(8);
+                Double price = rs.getDouble(9);
+                Flight flight = new Flight(airlineID,flightNum,aircraftID,isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price);
+                flights.add(flight);
+            }
+            return flights;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

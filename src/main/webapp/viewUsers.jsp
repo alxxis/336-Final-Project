@@ -31,7 +31,7 @@
 <body>
 <%
     Users curUser = (Users)session.getAttribute("currentUser");
-    System.out.println(curUser.toString());
+//    System.out.println(curUser.toString());
     if (curUser.getRole().equals("admin")){%>
 <form method="post" action = "edit-helper.jsp">
     <label for="username">Username:</label>

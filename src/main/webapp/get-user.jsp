@@ -15,7 +15,7 @@
 <%
     if (request.getAttribute("user") != null) {
         Users user  = (Users) request.getAttribute("user");
-        System.out.println("USER" + user);
+//        System.out.println("USER" + user);
 %>
 
 <h1>Student Record</h1>

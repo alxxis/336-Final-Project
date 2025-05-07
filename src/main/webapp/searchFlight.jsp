@@ -74,22 +74,24 @@
     </select>
 
     <label for="deptDate">Departure Date:</label >
-    <input type="date" id="deptDate" name="deptDate" required>
+    <input type="date" id="deptDate" name="deptDate" value = <%= deptDate!= null ? deptDate : ""%> required>
 
     <label for="arrivalDate">Arrival Date:</label>
-    <input type="date" id="arrivalDate" name="arrivalDate" required>
+    <input type="date" id="arrivalDate" name="arrivalDate" value = <%= arrivalDate!= null ? arrivalDate : ""%> required>
 
-    <input type="radio" id="oneWay" name="oneOrRound" value="oneWay" required>
     <label for="oneWay">One Way</label>
-    <input type="radio" id="roundTrip" name="oneOrRound" value="roundTrip">
+    <input type="radio" id="oneWay" name="oneOrRound" value="oneWay" required <%= "oneWay".equals(tripType) ? "checked" : "" %>>
+
     <label for="roundTrip">Round Trip</label>
+    <input type="radio" id="roundTrip" name="oneOrRound" value="roundTrip" <%= "roundTrip".equals(tripType) ? "checked" : "" %>>
+
 
     <label for="flexibility">Flexibility:</label>
     <select name="flexibility" id="flexibility" required>
-        <option value="zeroDays">0 Days</option>
-        <option value="oneDay">1 Day</option>
-        <option value="twoDays">2 Days</option>
-        <option value="threeDays">3 Days</option>
+        <option value="zeroDays" <%="zeroDays".equals(flexibility) ? "selected" : ""%>>0 Days</option>
+        <option value="oneDay" <%="oneDay".equals(flexibility) ? "selected" : ""%>>1 Day</option>
+        <option value="twoDays" <%="twoDays".equals(flexibility) ? "selected" : ""%>>2 Days</option>
+        <option value="threeDays" <%="threeDays".equals(flexibility) ? "selected" : ""%>>3 Days</option>
     </select>
 
     <button type="submit">Submit</button>

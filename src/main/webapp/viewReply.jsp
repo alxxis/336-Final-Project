@@ -11,7 +11,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%UsersService service = new UsersService();
-System.out.println("QID IS : " + request.getParameter("qID"));
+//System.out.println("QID IS : " + request.getParameter("qID"));
   int qID = Integer.parseInt(request.getParameter("qID"));
   List<Replies> replies = service.getReplies(qID);
   String username = (String) session.getAttribute("username");

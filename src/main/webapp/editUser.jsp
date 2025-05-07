@@ -21,11 +21,11 @@
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
         String role = request.getParameter("role");
-        System.out.println("request parameter is: " + lastName);
+//        System.out.println("request parameter is: " + lastName);
 
 //        UsersService service_2 = new UsersService();
         service.updateUser(usernameOriginal,username,password,firstName,lastName,email,role);
-        System.out.println("finished");
+//        System.out.println("finished");
         response.sendRedirect("viewUsers.jsp");
     }
 

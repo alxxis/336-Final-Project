@@ -9,7 +9,7 @@
 <%
     UsersService service = new UsersService();
     String username = request.getParameter("username");
-    System.out.println("Deleting user " + username);
+//    System.out.println("Deleting user " + username);
     service.deleteUser(username);
     response.sendRedirect("viewUsers.jsp");
 
