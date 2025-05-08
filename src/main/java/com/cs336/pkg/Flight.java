@@ -1,6 +1,7 @@
 package com.cs336.pkg;
 
 import java.sql.Time;
+import java.time.LocalDate;
 
 public class Flight {
 
@@ -15,7 +16,23 @@ public class Flight {
     private Double price;
     private int dayOffset;
     private int departureDay;
+    private LocalDate departureDate;
 
+
+    public Flight(String airlineID, int flightNum, int aircraftID, boolean isDomestic, String departureAirport, Time departureTime, String arrivalAirport, Time arrivalTime, Double price, int dayOffset, int departureDay,LocalDate departureDate) {
+        AirlineID = airlineID;
+        FlightNum = flightNum;
+        AircraftID = aircraftID;
+        this.isDomestic = isDomestic;
+        this.departureAirport = departureAirport;
+        this.departureTime = departureTime;
+        this.arrivalAirport = arrivalAirport;
+        this.arrivalTime = arrivalTime;
+        this.price = price;
+        this.dayOffset = dayOffset;
+        this.departureDay = departureDay;
+        this.departureDate = departureDate;
+    }
 
     public Flight(String airlineID, int flightNum, int aircraftID, boolean isDomestic, String departureAirport, Time departureTime, String arrivalAirport, Time arrivalTime, Double price, int dayOffset, int departureDay) {
         AirlineID = airlineID;
@@ -29,6 +46,15 @@ public class Flight {
         this.price = price;
         this.dayOffset = dayOffset;
         this.departureDay = departureDay;
+
+    }
+
+
+    public LocalDate getDepartureDate() {
+        return departureDate;
+    }
+    public void setDepartureDate(LocalDate departureDate) {
+        this.departureDate = departureDate;
     }
 
     public int getDayOffset() {

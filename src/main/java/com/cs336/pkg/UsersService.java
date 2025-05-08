@@ -1,5 +1,8 @@
 package com.cs336.pkg;
 
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.sql.*;
 
@@ -250,8 +253,33 @@ public class UsersService {
         return users;
     }
 
+    public String getDate(int departureDay, int curDay, LocalDate localDate, int flexibility) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+
+        // Normalize both to 0-based (0 = Sunday, ..., 6 = Saturday)
+        int normalizedCur = (curDay - 1) % 7;
+        int normalizedDep = (departureDay - 1) % 7;
+
+        // Calculate delta days from selected day to departure day, wrapping around the week
+        int forwardDelta = (normalizedDep - normalizedCur + 7) % 7;
+        int backwardDelta = (normalizedCur - normalizedDep + 7) % 7;
+
+        // If it's within the flexibility window in either direction, compute the actual date
+        if (forwardDelta <= flexibility) {
+            return localDate.plusDays(forwardDelta).format(formatter);
+        } else if (backwardDelta <= flexibility) {
+            return localDate.minusDays(backwardDelta).format(formatter);
+        }
+
+        // Otherwise, the flight doesn't fall within the flexibility range
+        return null;
+    }
+
+
+
     public List<Flight> getAllAirportFlights(String airportID, int dayOfWeek){
 //        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND fd.depatureDay = ?";
+
         String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND ((fd.depatureDay = ? AND  f.departureTime < f.arrivalTime) OR (fd.depatureDay = (?-2+7)%7 +1 AND f.departureTime > f.arrivalTime) )";
         List<Flight> flights = new ArrayList<>();
         try{
@@ -282,5 +310,48 @@ public class UsersService {
             return flights;
         }
     }
+
+    public List<Flight> getFlights(String airportID, int dayOfWeek,int flexibility,LocalDate localDate){
+        int minDay = ((dayOfWeek - flexibility - 1 + 7) % 7) + 1;
+        int maxDay = ((dayOfWeek - 1 + flexibility) % 7) + 1;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?) AND (IF (? <=?,fd.depatureDay BETWEEN ? AND ?,(fd.depatureDay >= ? OR fd.depatureDay <= ?)))"; // fd.departureDay BETWEEN (dayOfWeek - (flexibility+1)%7+1) AND (dayOfWeek + flexibility)%7
+
+        List<Flight> flights = new ArrayList<>();
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1, airportID);
+            ps.setInt(2,minDay);
+            ps.setInt(3,maxDay);
+            ps.setInt(4,minDay);
+            ps.setInt(5,maxDay);
+            ps.setInt(6,minDay);
+            ps.setInt(7,maxDay);
+            System.out.println(ps);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String airlineID = rs.getString(1);
+                int flightNum = rs.getInt(2);
+                int aircraftID = rs.getInt(3);
+                boolean isDomestic = rs.getBoolean(4);
+                String departureAirport = rs.getString(5);
+                Time departureTime = rs.getTime(6);
+                String arrivalAirport = rs.getString(7);
+                Time arrivalTime = rs.getTime(8);
+                Double price = rs.getDouble(9);
+                int dayOfset = rs.getInt(10);
+                int departureDay = rs.getInt(11);
+                LocalDate departureDate = LocalDate.parse(getDate(departureDay,dayOfWeek,localDate,flexibility),formatter);
+                Flight flight = new Flight(airlineID,flightNum,aircraftID,isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price,dayOfset,departureDay,departureDate);
+                flights.add(flight);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return flights;
+    }
+
+//
+
 
 }

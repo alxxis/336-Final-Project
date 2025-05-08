@@ -16,6 +16,7 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="com.cs336.pkg.Users" %>
+<%@ page import="com.cs336.pkg.Flight" %>
 
 <%
     // Load all airport options
@@ -29,14 +30,18 @@
     String arrivalDate = request.getParameter("arrivalDate");
     String tripType = request.getParameter("oneOrRound");
     String flexibility = request.getParameter("flexibility");
+    String isFlightLeg = request.getParameter("isFlightLeg");
 
 
 
     Airport selectedAirport = null;
     Airport selectedArvAirport = null;
 
+    LocalDate localDate = null;
+    int day = 0;
+    List<Flight> flights = null;
 
-    if ("POST".equalsIgnoreCase(request.getMethod()) && dep_airport != null) {
+    if ("get".equalsIgnoreCase(request.getMethod()) && dep_airport != null) {
         for (Airport a : airports) {
             if (a.getName().equals(dep_airport)) {
                 selectedAirport = a;
@@ -46,22 +51,29 @@
 
             }
         }
+        if (isFlightLeg == null){
+            session.setAttribute("departure",selectedAirport);
+            session.setAttribute("arrival",selectedArvAirport);
+        }
+        localDate = LocalDate.parse(deptDate);
+        day = LocalDate.parse(deptDate).getDayOfWeek().getValue();
+        flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate);
     }
 %>
 <html>
 <head>
     <title>Search for Flights</title>
     <%Users curUser = (Users)session.getAttribute("currentUser");
-        out.print(service.getHeader(curUser.getRole()));%>;%>
+        out.print(service.getHeader(curUser.getRole()));%>
 </head>
 <body>
 <h2>Search for Flights</h2>
 
-<form method="post">
+<form method="get">
     <label for="dep_airport">Departure Airport:</label>
     <select name="dep_airport" id="dep_airport" required>
         <% for (Airport a : airports) { %>
-        <option value="<%= a.getName() %>" <%= a.getName().equals(dep_airport) ? "selected" : "" %>>
+        <option value="<%= a.getAirportID() %>" <%= a.getAirportID().equals(dep_airport) ? "selected" : "" %>>
             <%= a.getName() %>
         </option>
         <% } %>
@@ -69,7 +81,7 @@
     <label for="arv_airport">Arrival Airport:</label>
     <select name="arv_airport" id="arv_airport" required>
         <% for (Airport a : airports) { %>
-        <option value="<%= a.getName() %>" <%= a.getName().equals(arv_airport) ? "selected" : "" %>>
+        <option value="<%= a.getAirportID() %>" <%= a.getAirportID().equals(arv_airport) ? "selected" : "" %>>
             <%= a.getName() %>
         </option>
         <% } %>
@@ -87,49 +99,53 @@
     <label for="roundTrip">Round Trip</label>
     <input type="radio" id="roundTrip" name="oneOrRound" value="roundTrip" <%= "roundTrip".equals(tripType) ? "checked" : "" %>>
 
-
     <label for="flexibility">Flexibility:</label>
     <select name="flexibility" id="flexibility" required>
-        <option value="zeroDays" <%="zeroDays".equals(flexibility) ? "selected" : ""%>>0 Days</option>
-        <option value="oneDay" <%="oneDay".equals(flexibility) ? "selected" : ""%>>1 Day</option>
-        <option value="twoDays" <%="twoDays".equals(flexibility) ? "selected" : ""%>>2 Days</option>
-        <option value="threeDays" <%="threeDays".equals(flexibility) ? "selected" : ""%>>3 Days</option>
+        <option value="0" <%="zeroDays".equals(flexibility) ? "selected" : ""%>>0 Days</option>
+        <option value="1" <%="oneDay".equals(flexibility) ? "selected" : ""%>>1 Day</option>
+        <option value="2" <%="twoDays".equals(flexibility) ? "selected" : ""%>>2 Days</option>
+        <option value="3" <%="threeDays".equals(flexibility) ? "selected" : ""%>>3 Days</option>
     </select>
 
     <button type="submit">Submit</button>
 </form>
 
-<% if (selectedArvAirport != null && selectedAirport !=  null) { %>
-<h2>Selected Arrival Airport Details</h2>
-<p>ID: <%= selectedAirport.getAirportID() %></p>
-<p>Name: <%= selectedAirport.getName() %></p>
-<p>ID: <%= selectedArvAirport.getAirportID() %></p>
-<p>Name: <%= selectedArvAirport.getName() %></p>
-<% } %>
+<%
+    if (flights != null && !flights.isEmpty()) {
+%>
+    <table>
+        <tr>
+            <th>Departure Date</th>
+            <th>Airline ID</th>
+            <th>Flight Number</th>
+            <th>Aircraft ID</th>
+            <th>Departure Airport</th>
+            <th>Departure Time</th>
+            <th>Arrival Airport</th>
+            <th>Arrival Time</th>
+            <th>Price</th>
+        </tr>
+        <%for(Flight flight: flights){%>
+        <tr>
+            <td><%= flight.getDepartureDate().toString()%>
+            <td><%=flight.getAirlineID()%></td>
+            <td><%=flight.getFlightNum()%></td>
+            <td><%=flight.getAircraftID()%></td>
+            <td><%=flight.getDepartureAirport()%></td>
+            <td><%=flight.getDepartureTime()%></td>
+            <td><%=flight.getArrivalAirport()%></td>
+            <td><%=flight.getArrivalTime()%></td>
+            <td><%=flight.getPrice()%></td>
+        </tr>
+        <%}%>
+    </table>
 
-<% if (deptDate != null) {%>
-<h2> Departure Date:</h2>
-<p> <%=deptDate%></p>
-<% LocalDate date = LocalDate.parse(deptDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    DayOfWeek dayOfWeek = date.getDayOfWeek();%>
-<p> <%=dayOfWeek.toString().toLowerCase()%></p>
-<% }%>
-
-<% if (arrivalDate != null) {%>
-<h2> Arrival Date:</h2>
-<p> <%=arrivalDate%></p>
-<% }%>
-
-<% if (tripType != null) {%>
-<h2> tripType:</h2>
-<p> <%=tripType%></p>
-<% }%>
+<%}else if (flights!= null && flights.isEmpty()){
+        out.print("<h2>No flights found with these specifications.</h2>");
+}
+%>
 
 
-<% if (flexibility!= null) {%>
-<h2> flexibility:</h2>
-<p> <%=flexibility%></p>
-<% }%>
 
 
 
@@ -138,22 +154,24 @@
 
 <%--<br>--%>
 <%--<p>Sort By: </p>--%>
-<%--<input type="radio" id="priceAsc" name="sorting" value="priceAsc">--%>
-<%--<label for="priceAsc">Price Ascending</label>--%>
-<%--<input type="radio" id="priceDesc" name="sorting" value="priceDesc">--%>
-<%--<label for="priceDesc">Price Descending</label>--%>
-<%--<input type="radio" id="takeAsc" name="sorting" value="takeAsc">--%>
-<%--<label for="takeAsc">Takeoff Time Ascending</label>--%>
-<%--<input type="radio" id="takeDesc" name="sorting" value="takeDesc">--%>
-<%--<label for="takeDesc">Takeoff Time Descending</label>--%>
-<%--<input type="radio" id="landingAsc" name="sorting" value="landingAsc">--%>
-<%--<label for="landingAsc">Landing Time Ascending</label>--%>
-<%--<input type="radio" id="landingDesc" name="sorting" value="landingDesc">--%>
-<%--<label for="landingDesc">Landing Time Descending</label>--%>
-<%--<input type="radio" id="durationAsc" name="sorting" value="durationAsc">--%>
-<%--<label for="durationAsc">Duration of Flight Ascending</label>--%>
-<%--<input type="radio" id="durationDesc" name="sorting" value="durationDesc">--%>
-<%--<label for="durationDesc">Duration of Flight Descending</label>--%>
+<%--<form>--%>
+<%--    <input type="radio" id="priceAsc" name="priceSort" value="ASC">--%>
+<%--    <label for="priceAsc">Price Ascending</label>--%>
+<%--    <input type="radio" id="priceDesc" name="priceSort" value="DESC">--%>
+<%--    <label for="priceDesc">Price Descending</label>--%>
+<%--    <input type="radio" id="takeAsc" name="timeSort" value="ASC">--%>
+<%--    <label for="takeAsc">Takeoff Time Ascending</label>--%>
+<%--    <input type="radio" id="takeDesc" name="timeSort" value="DESC">--%>
+<%--    <label for="takeDesc">Takeoff Time Descending</label>--%>
+<%--    <input type="radio" id="landingAsc" name="sorting" value="ASC">--%>
+<%--    <label for="landingAsc">Landing Time Ascending</label>--%>
+<%--    <input type="radio" id="landingDesc" name="sorting" value="DESC">--%>
+<%--    <label for="landingDesc">Landing Time Descending</label>--%>
+<%--    <input type="radio" id="durationAsc" name="duration" value="ASC">--%>
+<%--    <label for="durationAsc">Duration of Flight Ascending</label>--%>
+<%--    <input type="radio" id="durationDesc" name="duration" value="DESC">--%>
+<%--    <label for="durationDesc">Duration of Flight Descending</label>--%>
+<%--</form>--%>
 
 <%--<br>--%>
 
@@ -161,8 +179,6 @@
 
 <%--<label for="maxPrice">Max Price: </label>--%>
 <%--<input type="number" id="maxPrice" name="maxPrice">--%>
-<%--<label for="maxStops">Max Number of Stops: </label>--%>
-<%--<input type="number" id="maxStops" name="maxStops">--%>
 <%--<p>Airline: </p>--%>
 <%--<select name="airline" id="airline">--%>
 <%--    <option value="EWR">Newark International Airport</option>--%>

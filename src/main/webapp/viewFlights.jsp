@@ -21,7 +21,6 @@
     String dates = request.getParameter("dates");
 
     LocalDate localDate = null;
-
     int day = 0;
 
 
