@@ -26,11 +26,11 @@
         }
     </style>
     <%
-        out.print(service.getHeader());%>
+        Users curUser = (Users)session.getAttribute("currentUser");
+        out.print(service.getHeader(curUser.getRole()));%>%>
 </head>
 <body>
 <%
-    Users curUser = (Users)session.getAttribute("currentUser");
 //    System.out.println(curUser.toString());
     if (curUser.getRole().equals("admin")){%>
 <form method="post" action = "edit-helper.jsp">

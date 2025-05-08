@@ -11,7 +11,8 @@
     <title>Dashboard</title>
 
     <%UsersService service = new UsersService();
-    out.print(service.getHeader());%>
+    Users curUser = (Users)session.getAttribute("currentUser");
+    out.print(service.getHeader(curUser.getRole()));%>
 </head>
 
 <body>

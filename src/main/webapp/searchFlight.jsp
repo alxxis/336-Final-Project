@@ -15,6 +15,7 @@
 <%@ page import="java.time.DayOfWeek" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.LocalDate" %>
+<%@ page import="com.cs336.pkg.Users" %>
 
 <%
     // Load all airport options
@@ -50,7 +51,8 @@
 <html>
 <head>
     <title>Search for Flights</title>
-    <%out.print(service.getHeader());%>
+    <%Users curUser = (Users)session.getAttribute("currentUser");
+        out.print(service.getHeader(curUser.getRole()));%>;%>
 </head>
 <body>
 <h2>Search for Flights</h2>

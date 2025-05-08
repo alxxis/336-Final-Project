@@ -12,15 +12,21 @@ public class UsersService {
         con = db.getConnection();
     }
 
-
     // gets the nav bar for the website
-    public String getHeader(){
-        return "<ul>\n" +
+    public String getHeader(String role){
+        String header_base = "<ul>\n" +
                 "        <li><a href=\"HelloUser.jsp\">Dashboard</a></li>\n" +
-                "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n" +
                 "        <li><a href=\"searchFlight.jsp\">Search Flights</a></li>\n" +
-                "        <li><a href=\"questions.jsp\">Questions</a></li>\n" +
-                "    </ul>";
+                "        <li><a href=\"questions.jsp\">Questions</a></li>\n";
+
+        if (role.equalsIgnoreCase("admin")){
+            header_base +=  "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n";
+        }
+        else if (role.equalsIgnoreCase("customer_rep")){
+            header_base +=  "        <li><a href=\"viewFlights.jsp\">View All Flights</a></li>\n";
+        }
+        header_base+=        "    </ul>";
+        return header_base;
     }
 
     public Users getUser(String username){
@@ -244,14 +250,16 @@ public class UsersService {
         return users;
     }
 
-    public List<Flight> getAllAirportFlights(String airportID, String dayOfWeek){
-        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND fd.depatureDay = ?;";
+    public List<Flight> getAllAirportFlights(String airportID, int dayOfWeek){
+//        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND fd.depatureDay = ?";
+        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND ((fd.depatureDay = ? AND  f.departureTime < f.arrivalTime) OR (fd.depatureDay = (?-2+7)%7 +1 AND f.departureTime > f.arrivalTime) )";
         List<Flight> flights = new ArrayList<>();
         try{
             PreparedStatement ps = con.prepareStatement(search);
             ps.setString(1, airportID);
             ps.setString(2,airportID);
-            ps.setString(3,dayOfWeek);
+            ps.setInt(3,dayOfWeek);
+            ps.setInt(4,dayOfWeek);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 String airlineID = rs.getString(1);
@@ -263,13 +271,15 @@ public class UsersService {
                 String arrivalAirport = rs.getString(7);
                 Time arrivalTime = rs.getTime(8);
                 Double price = rs.getDouble(9);
-                Flight flight = new Flight(airlineID,flightNum,aircraftID,isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price);
+                int dayOfset = rs.getInt(10);
+                int departureDay = rs.getInt(11);
+                Flight flight = new Flight(airlineID,flightNum,aircraftID,isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price,dayOfset,departureDay);
                 flights.add(flight);
             }
             return flights;
         }catch (SQLException e){
             e.printStackTrace();
-            return null;
+            return flights;
         }
     }
 

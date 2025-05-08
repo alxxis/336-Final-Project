@@ -13,14 +13,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4a043a75-9c73-4b56-b9f1-4d2ae0593f5e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/viewFlights.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Flight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/deleteUser.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/deleteUser.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/editUser.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/editUser.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/get-user.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/get-user.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/HelloUser.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/HelloUser.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/questions.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/questions.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/viewReply.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/viewReply.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/viewUsers.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/viewUsers.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -235,7 +235,9 @@
       <workItem from="1746484214903" duration="13591000" />
       <workItem from="1746505307393" duration="1188000" />
       <workItem from="1746646598062" duration="1570000" />
-      <workItem from="1746654394182" duration="4377000" />
+      <workItem from="1746654394182" duration="4691000" />
+      <workItem from="1746663953677" duration="5650000" />
+      <workItem from="1746711928514" duration="3867000" />
     </task>
     <servers />
   </component>

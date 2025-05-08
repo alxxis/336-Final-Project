@@ -13,9 +13,11 @@ public class Flight {
     private String arrivalAirport;
     private Time arrivalTime;
     private Double price;
+    private int dayOffset;
+    private int departureDay;
 
 
-    public Flight(String airlineID, int flightNum, int aircraftID, boolean isDomestic, String departureAirport, Time departureTime, String arrivalAirport, Time arrivalTime, Double price) {
+    public Flight(String airlineID, int flightNum, int aircraftID, boolean isDomestic, String departureAirport, Time departureTime, String arrivalAirport, Time arrivalTime, Double price, int dayOffset, int departureDay) {
         AirlineID = airlineID;
         FlightNum = flightNum;
         AircraftID = aircraftID;
@@ -25,6 +27,21 @@ public class Flight {
         this.arrivalAirport = arrivalAirport;
         this.arrivalTime = arrivalTime;
         this.price = price;
+        this.dayOffset = dayOffset;
+        this.departureDay = departureDay;
+    }
+
+    public int getDayOffset() {
+        return dayOffset;
+    }
+    public void setDayOffset(int dayOffset) {
+        this.dayOffset = dayOffset;
+    }
+    public int getDepartureDay() {
+        return departureDay;
+    }
+    public void setDepartureDay(int departureDay) {
+        this.departureDay = departureDay;
     }
 
     public String getAirlineID() {

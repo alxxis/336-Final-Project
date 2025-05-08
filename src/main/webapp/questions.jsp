@@ -23,7 +23,7 @@
 <html>
 <head>
     <title>Questions</title>
-    <%out.print(service.getHeader());%>
+    <%out.print(service.getHeader(curUser.getRole()));%>
     <style>
         table,
         th,
