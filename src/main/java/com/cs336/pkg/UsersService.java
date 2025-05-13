@@ -229,6 +229,25 @@ public class UsersService {
             return null;
         }
     }
+
+    public List<Airline>getAirlines(){
+        String select = ("SELECT * FROM application.airline");
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ResultSet rs = ps.executeQuery();
+            List<Airline> airlines = new ArrayList<>();
+            while (rs.next()) {
+                String airlineID = rs.getString(1);
+                String name = rs.getString(2);
+                Airline airline = new Airline(airlineID,name);
+                airlines.add(airline);
+            }
+            return airlines;
+        }
+        catch (SQLException e){
+            return null;
+        }
+    }
     public List<Users> getAllCustomersAndReps(){
         String select = ("SELECT * FROM application.users WHERE role <> 'admin'");
         List<Users> users = new ArrayList<>();
@@ -311,7 +330,7 @@ public class UsersService {
         }
     }
 
-    public List<Flight> getFlights(String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort){
+    public List<Flight> getFlights(String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort, String maxPrice, String airline, Time departAfter, Time arriveBefore){
         int minDay = ((dayOfWeek - flexibility - 1 + 7) % 7) + 1;
         int maxDay = ((dayOfWeek - 1 + flexibility) % 7) + 1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
@@ -342,9 +361,13 @@ public class UsersService {
                     break;
             }
         }
-        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum) WHERE (f.departureAirport = ?) AND (IF (? <=?,fd.depatureDay BETWEEN ? AND ?,(fd.depatureDay >= ? OR fd.depatureDay <= ?)))"; // fd.departureDay BETWEEN (dayOfWeek - (flexibility+1)%7+1) AND (dayOfWeek + flexibility)%7
+        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum) WHERE (f.departureAirport = ?) AND (IF (? <=?,fd.depatureDay BETWEEN ? AND ?,(fd.depatureDay >= ? OR fd.depatureDay <= ?))) "; // fd.departureDay BETWEEN (dayOfWeek - (flexibility+1)%7+1) AND (dayOfWeek + flexibility)%7
+//        if(maxPrice!=null && !maxPrice.isEmpty()) search +="AND f.price <= ? ";
+//        if(airline!=null && !airline.isEmpty()) search+="AND f.airlineID = ? ";
+//        if(departAfter!=null) search+="AND f.departureTime >= ? ";
+//        if(arriveBefore!=null) search+="AND f.arrivalTime <= ? ";
         search+= " " + sortQuery;
-
+        System.out.println("final query: " + search);
         List<Flight> flights = new ArrayList<>();
         try{
             PreparedStatement ps = con.prepareStatement(search);

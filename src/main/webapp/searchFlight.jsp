@@ -9,19 +9,17 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="javax.naming.*" %>
 <%@ page import="javax.sql.*" %>
-<%@ page import="com.cs336.pkg.Airport" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.cs336.pkg.UsersService" %>
 <%@ page import="java.time.DayOfWeek" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.time.LocalDate" %>
-<%@ page import="com.cs336.pkg.Users" %>
-<%@ page import="com.cs336.pkg.Flight" %>
+<%@ page import="com.cs336.pkg.*" %>
 
 <%
     // Load all airport options
     UsersService service = new UsersService();
     List<Airport> airports = service.getAirports();
+    List<Airline> airlines = service.getAirlines();
 
     // Get selected value from form submission
     String dep_airport = request.getParameter("dep_airport");
@@ -58,11 +56,21 @@
         localDate = LocalDate.parse(deptDate);
         day = LocalDate.parse(deptDate).getDayOfWeek().getValue();
         String sortParam = request.getParameter("sort");
-        if(sortParam==null) {
-            flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate, null);
-        } else{
-            flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate, sortParam);
+        String maxPrice = request.getParameter("maxPrice");
+        String airline = request.getParameter("airline");
+        String takeoffAfterRequest = request.getParameter("takeoffAfter");
+        String landingBeforeRequest = request.getParameter("landingBefore");
+        Time takeoffAfter = null;
+        Time landingBefore = null;
+
+        // Convert Strings to Time if not null or empty
+        if (takeoffAfterRequest != null && !takeoffAfterRequest.isEmpty()) {
+            takeoffAfter = Time.valueOf(takeoffAfterRequest + ":00");  // Assuming time is in HH:mm format
         }
+        if (landingBeforeRequest != null && !landingBeforeRequest.isEmpty()) {
+            landingBefore = Time.valueOf(landingBeforeRequest + ":00");  // Assuming time is in HH:mm format
+        }
+        flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate, sortParam, maxPrice, airline, takeoffAfter, landingBefore);
     }
 
 %>
@@ -92,6 +100,7 @@
         </option>
         <% } %>
     </select>
+
 
     <label for="deptDate">Departure Date:</label >
     <input type="date" id="deptDate" name="deptDate" value = <%= deptDate!= null ? deptDate : ""%> required>
@@ -132,6 +141,23 @@
     <input type="radio" id="durationDesc" name="sort" value="durationDesc">
     <label for="durationDesc">Duration of Flight Descending</label>
 
+    <p>Filter By:</p>
+
+    <label for="maxPrice">Max Price: </label>
+    <input type="number" id="maxPrice" name="maxPrice">
+    <label for="airline">Airline:</label>
+    <select name="airline" id="airline" required>
+        <% for (Airline a : airlines) { %>
+        <option value="<%= a.getAirlineID() %>" <%= a.getAirlineID().equals(dep_airport) ? "selected" : "" %>>
+            <%= a.getName() %>
+        </option>
+        <% } %>
+    </select>
+    <label for="takeoffAfter">Takeoff Time After:</label>
+    <input type="time" id="takeoffAfter" name="takeoffAfter">
+    <label for="landingBefore">Landing Time Before:</label>
+    <input type="time" id="landingBefore" name="landingBefore">
+
     <button type="submit">Submit</button>
 </form>
 
@@ -169,53 +195,6 @@
         out.print("<h2>No flights found with these specifications.</h2>");
 }
 %>
-
-
-
-
-
-
-
-
-<%--<br>--%>
-<%--<p>Sort By: </p>--%>
-<%--<form method="get">--%>
-<%--    <input type="radio" id="priceAsc" name="sort" value="ASC">--%>
-<%--    <label for="priceAsc">Price Ascending</label>--%>
-<%--    <input type="radio" id="priceDesc" name="sort" value="DESC">--%>
-<%--    <label for="priceDesc">Price Descending</label>--%>
-<%--    <input type="radio" id="takeAsc" name="sort" value="ASC">--%>
-<%--    <label for="takeAsc">Takeoff Time Ascending</label>--%>
-<%--    <input type="radio" id="takeDesc" name="sort" value="DESC">--%>
-<%--    <label for="takeDesc">Takeoff Time Descending</label>--%>
-<%--    <input type="radio" id="landingAsc" name="sort" value="ASC">--%>
-<%--    <label for="landingAsc">Landing Time Ascending</label>--%>
-<%--    <input type="radio" id="landingDesc" name="sort" value="DESC">--%>
-<%--    <label for="landingDesc">Landing Time Descending</label>--%>
-<%--    <input type="radio" id="durationAsc" name="sort" value="ASC">--%>
-<%--    <label for="durationAsc">Duration of Flight Ascending</label>--%>
-<%--    <input type="radio" id="durationDesc" name="sort" value="DESC">--%>
-<%--    <label for="durationDesc">Duration of Flight Descending</label>--%>
-
-<%--    <input type="submit" value="sort">--%>
-<%--</form>--%>
-
-<br>
-
-<p>Filter By:</p>
-
-<label for="maxPrice">Max Price: </label>
-<input type="number" id="maxPrice" name="maxPrice">
-<p>Airline: </p>
-<select name="airline" id="airline">
-    <option value="EWR">Newark International Airport</option>
-    <option value="JFK">John F. Kennedy International Airport</option>
-</select>
-<label for="takeoffAfter">Takeoff Time After:</label>
-<input type="time" id="takeoffAfter" name="takeoffAfter">
-<label for="landingBefore">Landing Time Before:</label>
-<input type="time" id="landingBefore" name="landingBefore">
-<input type="submit" value="Submit">
 
 </body>
 </html>
