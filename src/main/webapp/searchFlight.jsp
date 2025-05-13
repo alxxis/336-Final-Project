@@ -57,8 +57,14 @@
         }
         localDate = LocalDate.parse(deptDate);
         day = LocalDate.parse(deptDate).getDayOfWeek().getValue();
-        flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate);
+        String sortParam = request.getParameter("sort");
+        if(sortParam==null) {
+            flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate, null);
+        } else{
+            flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate, sortParam);
+        }
     }
+
 %>
 <html>
 <head>
@@ -107,6 +113,25 @@
         <option value="3" <%="threeDays".equals(flexibility) ? "selected" : ""%>>3 Days</option>
     </select>
 
+    <br>
+
+    <input type="radio" id="priceAsc" name="sort" value="priceAsc">
+    <label for="priceAsc">Price Ascending</label>
+    <input type="radio" id="priceDesc" name="sort" value="priceDesc">
+    <label for="priceDesc">Price Descending</label>
+    <input type="radio" id="takeAsc" name="sort" value="takeAsc">
+    <label for="takeAsc">Takeoff Time Ascending</label>
+    <input type="radio" id="takeDesc" name="sort" value="takeDesc">
+    <label for="takeDesc">Takeoff Time Descending</label>
+    <input type="radio" id="landingAsc" name="sort" value="landingAsc">
+    <label for="landingAsc">Landing Time Ascending</label>
+    <input type="radio" id="landingDesc" name="sort" value="landingDesc">
+    <label for="landingDesc">Landing Time Descending</label>
+    <input type="radio" id="durationAsc" name="sort" value="durationAsc">
+    <label for="durationAsc">Duration of Flight Ascending</label>
+    <input type="radio" id="durationDesc" name="sort" value="durationDesc">
+    <label for="durationDesc">Duration of Flight Descending</label>
+
     <button type="submit">Submit</button>
 </form>
 
@@ -154,41 +179,43 @@
 
 <%--<br>--%>
 <%--<p>Sort By: </p>--%>
-<%--<form>--%>
-<%--    <input type="radio" id="priceAsc" name="priceSort" value="ASC">--%>
+<%--<form method="get">--%>
+<%--    <input type="radio" id="priceAsc" name="sort" value="ASC">--%>
 <%--    <label for="priceAsc">Price Ascending</label>--%>
-<%--    <input type="radio" id="priceDesc" name="priceSort" value="DESC">--%>
+<%--    <input type="radio" id="priceDesc" name="sort" value="DESC">--%>
 <%--    <label for="priceDesc">Price Descending</label>--%>
-<%--    <input type="radio" id="takeAsc" name="timeSort" value="ASC">--%>
+<%--    <input type="radio" id="takeAsc" name="sort" value="ASC">--%>
 <%--    <label for="takeAsc">Takeoff Time Ascending</label>--%>
-<%--    <input type="radio" id="takeDesc" name="timeSort" value="DESC">--%>
+<%--    <input type="radio" id="takeDesc" name="sort" value="DESC">--%>
 <%--    <label for="takeDesc">Takeoff Time Descending</label>--%>
-<%--    <input type="radio" id="landingAsc" name="sorting" value="ASC">--%>
+<%--    <input type="radio" id="landingAsc" name="sort" value="ASC">--%>
 <%--    <label for="landingAsc">Landing Time Ascending</label>--%>
-<%--    <input type="radio" id="landingDesc" name="sorting" value="DESC">--%>
+<%--    <input type="radio" id="landingDesc" name="sort" value="DESC">--%>
 <%--    <label for="landingDesc">Landing Time Descending</label>--%>
-<%--    <input type="radio" id="durationAsc" name="duration" value="ASC">--%>
+<%--    <input type="radio" id="durationAsc" name="sort" value="ASC">--%>
 <%--    <label for="durationAsc">Duration of Flight Ascending</label>--%>
-<%--    <input type="radio" id="durationDesc" name="duration" value="DESC">--%>
+<%--    <input type="radio" id="durationDesc" name="sort" value="DESC">--%>
 <%--    <label for="durationDesc">Duration of Flight Descending</label>--%>
+
+<%--    <input type="submit" value="sort">--%>
 <%--</form>--%>
 
-<%--<br>--%>
+<br>
 
-<%--<p>Filter By:</p>--%>
+<p>Filter By:</p>
 
-<%--<label for="maxPrice">Max Price: </label>--%>
-<%--<input type="number" id="maxPrice" name="maxPrice">--%>
-<%--<p>Airline: </p>--%>
-<%--<select name="airline" id="airline">--%>
-<%--    <option value="EWR">Newark International Airport</option>--%>
-<%--    <option value="JFK">John F. Kennedy International Airport</option>--%>
-<%--</select>--%>
-<%--<label for="takeoffAfter">Takeoff Time After:</label>--%>
-<%--<input type="time" id="takeoffAfter" name="takeoffAfter">--%>
-<%--<label for="landingBefore">Landing Time Before:</label>--%>
-<%--<input type="time" id="landingBefore" name="landingBefore">--%>
-<%--<input type="submit" value="Submit">--%>
+<label for="maxPrice">Max Price: </label>
+<input type="number" id="maxPrice" name="maxPrice">
+<p>Airline: </p>
+<select name="airline" id="airline">
+    <option value="EWR">Newark International Airport</option>
+    <option value="JFK">John F. Kennedy International Airport</option>
+</select>
+<label for="takeoffAfter">Takeoff Time After:</label>
+<input type="time" id="takeoffAfter" name="takeoffAfter">
+<label for="landingBefore">Landing Time Before:</label>
+<input type="time" id="landingBefore" name="landingBefore">
+<input type="submit" value="Submit">
 
 </body>
 </html>

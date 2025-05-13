@@ -280,7 +280,7 @@ public class UsersService {
     public List<Flight> getAllAirportFlights(String airportID, int dayOfWeek){
 //        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND fd.depatureDay = ?";
 
-        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND ((fd.depatureDay = ? AND  f.departureTime < f.arrivalTime) OR (fd.depatureDay = (?-2+7)%7 +1 AND f.departureTime > f.arrivalTime) )";
+        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum) WHERE (f.departureAirport = ?  OR f.arrivalAirport = ?) AND ((fd.depatureDay = ? AND  f.departureTime < f.arrivalTime) OR (fd.depatureDay = (?-2+7)%7 +1 AND f.departureTime > f.arrivalTime) )";
         List<Flight> flights = new ArrayList<>();
         try{
             PreparedStatement ps = con.prepareStatement(search);
@@ -301,7 +301,7 @@ public class UsersService {
                 Double price = rs.getDouble(9);
                 int dayOfset = rs.getInt(10);
                 int departureDay = rs.getInt(11);
-                Flight flight = new Flight(airlineID,flightNum,aircraftID,isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price,dayOfset,departureDay);
+                Flight flight = new Flight(airlineID,flightNum,aircraftID, isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price,dayOfset,departureDay);
                 flights.add(flight);
             }
             return flights;
@@ -311,11 +311,39 @@ public class UsersService {
         }
     }
 
-    public List<Flight> getFlights(String airportID, int dayOfWeek,int flexibility,LocalDate localDate){
+    public List<Flight> getFlights(String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort){
         int minDay = ((dayOfWeek - flexibility - 1 + 7) % 7) + 1;
         int maxDay = ((dayOfWeek - 1 + flexibility) % 7) + 1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum, aircraftID) WHERE (f.departureAirport = ?) AND (IF (? <=?,fd.depatureDay BETWEEN ? AND ?,(fd.depatureDay >= ? OR fd.depatureDay <= ?)))"; // fd.departureDay BETWEEN (dayOfWeek - (flexibility+1)%7+1) AND (dayOfWeek + flexibility)%7
+        //sorting flights
+        String sortQuery = "";
+        if(sort!=null){
+            switch(sort){
+                case "priceASC":
+                    sortQuery = "ORDER BY price ASC";
+                    break;
+                case "priceDESC":
+                    sortQuery = "ORDER BY price DESC";
+                    break;
+                case "takeASC":
+                    sortQuery = "ORDER BY departureTime ASC";
+                    break;
+                case "takeDESC":
+                    sortQuery = "ORDER BY departureTime DESC";
+                    break;
+                case "landingASC":
+                    sortQuery = "ORDER BY arrivalTime ASC";
+                    break;
+                case "landingDESC":
+                    sortQuery = "ORDER BY arrivalTime DESC";
+                    break;
+                default:
+                    sortQuery="";
+                    break;
+            }
+        }
+        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum) WHERE (f.departureAirport = ?) AND (IF (? <=?,fd.depatureDay BETWEEN ? AND ?,(fd.depatureDay >= ? OR fd.depatureDay <= ?)))"; // fd.departureDay BETWEEN (dayOfWeek - (flexibility+1)%7+1) AND (dayOfWeek + flexibility)%7
+        search+= " " + sortQuery;
 
         List<Flight> flights = new ArrayList<>();
         try{
