@@ -35,6 +35,12 @@
     Airport selectedAirport = null;
     Airport selectedArvAirport = null;
 
+    String sortParam = null;
+    String maxPrice = null;
+    String airline = null;
+    String takeoffAfterRequest = null;
+    String landingBeforeRequest = null;
+
     LocalDate localDate = null;
     int day = 0;
     List<Flight> flights = null;
@@ -55,11 +61,11 @@
         }
         localDate = LocalDate.parse(deptDate);
         day = LocalDate.parse(deptDate).getDayOfWeek().getValue();
-        String sortParam = request.getParameter("sort");
-        String maxPrice = request.getParameter("maxPrice");
-        String airline = request.getParameter("airline");
-        String takeoffAfterRequest = request.getParameter("takeoffAfter");
-        String landingBeforeRequest = request.getParameter("landingBefore");
+        sortParam = request.getParameter("sort");
+         maxPrice = request.getParameter("maxPrice");
+         airline = request.getParameter("airline");
+         takeoffAfterRequest = request.getParameter("takeoffAfter");
+        landingBeforeRequest = request.getParameter("landingBefore");
         Time takeoffAfter = null;
         Time landingBefore = null;
 
@@ -108,55 +114,59 @@
     <label for="arrivalDate">Arrival Date:</label>
     <input type="date" id="arrivalDate" name="arrivalDate" value = <%= arrivalDate!= null ? arrivalDate : ""%> required>
 
-    <label for="oneWay">One Way</label>
+
     <input type="radio" id="oneWay" name="oneOrRound" value="oneWay" required <%= "oneWay".equals(tripType) ? "checked" : "" %>>
+    <label for="oneWay">One Way</label>
 
-    <label for="roundTrip">Round Trip</label>
+
     <input type="radio" id="roundTrip" name="oneOrRound" value="roundTrip" <%= "roundTrip".equals(tripType) ? "checked" : "" %>>
+    <label for="roundTrip">Round Trip</label>
 
-    <label for="flexibility">Flexibility:</label>
+
     <select name="flexibility" id="flexibility" required>
-        <option value="0" <%="zeroDays".equals(flexibility) ? "selected" : ""%>>0 Days</option>
-        <option value="1" <%="oneDay".equals(flexibility) ? "selected" : ""%>>1 Day</option>
-        <option value="2" <%="twoDays".equals(flexibility) ? "selected" : ""%>>2 Days</option>
-        <option value="3" <%="threeDays".equals(flexibility) ? "selected" : ""%>>3 Days</option>
+        <option value="0" <%="0".equals(flexibility) ? "selected" : ""%>>0 Days</option>
+        <option value="1" <%="1".equals(flexibility) ? "selected" : ""%>>1 Day</option>
+        <option value="2" <%="2".equals(flexibility) ? "selected" : ""%>>2 Days</option>
+        <option value="3" <%="3".equals(flexibility) ? "selected" : ""%>>3 Days</option>
     </select>
+    <label for="flexibility">Flexibility:</label>
 
     <br>
 
-    <input type="radio" id="priceAsc" name="sort" value="priceAsc">
+    <input type="radio" id="priceAsc" name="sort" value="priceAsc" <%= "priceAsc".equals(sortParam) ? "checked" : "" %>>
     <label for="priceAsc">Price Ascending</label>
-    <input type="radio" id="priceDesc" name="sort" value="priceDesc">
+    <input type="radio" id="priceDesc" name="sort" value="priceDesc" <%= "priceDesc".equals(sortParam) ? "checked" : "" %>>
     <label for="priceDesc">Price Descending</label>
-    <input type="radio" id="takeAsc" name="sort" value="takeAsc">
+    <input type="radio" id="takeAsc" name="sort" value="takeAsc" <%= "takeAsc".equals(sortParam) ? "checked" : "" %>>
     <label for="takeAsc">Takeoff Time Ascending</label>
-    <input type="radio" id="takeDesc" name="sort" value="takeDesc">
+    <input type="radio" id="takeDesc" name="sort" value="takeDesc" <%= "takeDesc".equals(sortParam) ? "checked" : "" %>>
     <label for="takeDesc">Takeoff Time Descending</label>
-    <input type="radio" id="landingAsc" name="sort" value="landingAsc">
+    <input type="radio" id="landingAsc" name="sort" value="landingAsc" <%= "landingAsc".equals(sortParam) ? "checked" : "" %>>
     <label for="landingAsc">Landing Time Ascending</label>
-    <input type="radio" id="landingDesc" name="sort" value="landingDesc">
+    <input type="radio" id="landingDesc" name="sort" value="landingDesc" <%= "landingDesc".equals(sortParam) ? "checked" : "" %>>
     <label for="landingDesc">Landing Time Descending</label>
-    <input type="radio" id="durationAsc" name="sort" value="durationAsc">
+    <input type="radio" id="durationAsc" name="sort" value="durationAsc" <%= "durationAsc".equals(sortParam) ? "checked" : "" %>>
     <label for="durationAsc">Duration of Flight Ascending</label>
-    <input type="radio" id="durationDesc" name="sort" value="durationDesc">
+    <input type="radio" id="durationDesc" name="sort" value="durationDesc" <%= "durationDesc".equals(sortParam) ? "checked" : "" %>>
     <label for="durationDesc">Duration of Flight Descending</label>
 
     <p>Filter By:</p>
 
     <label for="maxPrice">Max Price: </label>
-    <input type="number" id="maxPrice" name="maxPrice">
+    <input type="number" id="maxPrice" name="maxPrice" <%= maxPrice!= null ? Integer.getInteger(maxPrice) : ""%>>
     <label for="airline">Airline:</label>
-    <select name="airline" id="airline" required>
+    <select name="airline" id="airline">
+        <option value="">-- Any Airline --</option>
         <% for (Airline a : airlines) { %>
-        <option value="<%= a.getAirlineID() %>" <%= a.getAirlineID().equals(dep_airport) ? "selected" : "" %>>
+        <option value="<%= a.getAirlineID() %>" <%= a.getAirlineID().equals(airline) ? "selected" : "" %>>
             <%= a.getName() %>
         </option>
         <% } %>
     </select>
     <label for="takeoffAfter">Takeoff Time After:</label>
-    <input type="time" id="takeoffAfter" name="takeoffAfter">
+    <input type="time" id="takeoffAfter" name="takeoffAfter" value = <%= takeoffAfterRequest!= null ? takeoffAfterRequest : ""%>>
     <label for="landingBefore">Landing Time Before:</label>
-    <input type="time" id="landingBefore" name="landingBefore">
+    <input type="time" id="landingBefore" name="landingBefore" value = <%= landingBeforeRequest!= null ? landingBeforeRequest : ""%>>
 
     <button type="submit">Submit</button>
 </form>

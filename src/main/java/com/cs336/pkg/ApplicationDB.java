@@ -30,7 +30,7 @@ public class ApplicationDB {
         try {
             //Create a connection to your DB
 
-            connection = DriverManager.getConnection(connectionUrl,"root","IRrRI5U40Qqc$3SJ");
+            connection = DriverManager.getConnection(connectionUrl,"root","pass");
         } catch (SQLException e) {
             // TODO Auto-generated catch block
            e.printStackTrace();

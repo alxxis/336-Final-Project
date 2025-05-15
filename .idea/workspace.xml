@@ -14,6 +14,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4a043a75-9c73-4b56-b9f1-4d2ae0593f5e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/ApplicationDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/ApplicationDB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/searchFlight.jsp" afterDir="false" />
     </list>
@@ -79,7 +80,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Tomcat Server.Tomcat 9.0.104.executor": "Run",
-    "git-widget-placeholder": "apg-2",
+    "git-widget-placeholder": "d35299c5",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Akshay/Documents/336-Final-Project/src/main/webapp",
     "node.js.detected.package.eslint": "true",
