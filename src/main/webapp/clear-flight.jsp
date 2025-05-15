@@ -14,7 +14,6 @@
 <body>
 
 <%
-
   ArrayList<Flight> flights = (ArrayList<Flight>) session.getAttribute("flightList");
   if (flights != null)  flights.clear();
   session.setAttribute("departure",null);

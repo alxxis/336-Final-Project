@@ -363,6 +363,7 @@ public class UsersService {
         catch (SQLException e){
             e.printStackTrace();
         }
+        return false;
     }
 
     public List<Flight> getFlights(String previousAirlineID, int previousFlightNum, String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort, String maxPrice, String airline, Time departAfter, Time arriveBefore){
