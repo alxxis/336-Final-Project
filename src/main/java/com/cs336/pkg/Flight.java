@@ -141,4 +141,9 @@ public class Flight {
     public void setArrivalTime(Time arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
+
+    @Override
+    public String toString() {
+        return "This flight is: " + this.getAirlineID() + " " + this.getFlightNum();
+    }
 }

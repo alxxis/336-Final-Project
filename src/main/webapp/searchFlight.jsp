@@ -29,6 +29,10 @@
     String tripType = request.getParameter("oneOrRound");
     String flexibility = request.getParameter("flexibility");
     String isFlightLeg = request.getParameter("isFlightLeg");
+    System.out.println("isFlightLeg: "+ isFlightLeg);
+
+    String previousAirlineID = request.getParameter("previousAirlineID");
+    int previousFlightNum = (request.getParameter("previousFlightNum") == null) ? 0: Integer.parseInt(request.getParameter("previousFlightNum"));
 
 
 
@@ -55,9 +59,9 @@
 
             }
         }
-        if (isFlightLeg == null){
-            session.setAttribute("departure",selectedAirport);
-            session.setAttribute("arrival",selectedArvAirport);
+        if (isFlightLeg == null ){
+            session.setAttribute("departure",dep_airport);
+            session.setAttribute("arrival",arv_airport);
         }
         localDate = LocalDate.parse(deptDate);
         day = LocalDate.parse(deptDate).getDayOfWeek().getValue();
@@ -76,7 +80,7 @@
         if (landingBeforeRequest != null && !landingBeforeRequest.isEmpty()) {
             landingBefore = Time.valueOf(landingBeforeRequest + ":00");  // Assuming time is in HH:mm format
         }
-        flights = service.getFlights(null,0,dep_airport,day,Integer.parseInt(flexibility),localDate, sortParam, maxPrice, airline, takeoffAfter, landingBefore);
+        flights = service.getFlights(previousAirlineID,previousFlightNum,dep_airport,day,Integer.parseInt(flexibility),localDate, sortParam, maxPrice, airline, takeoffAfter, landingBefore);
     }
 
 %>
@@ -197,14 +201,17 @@
             <td><%=flight.getArrivalAirport()%></td>
             <td><%=flight.getArrivalTime()%></td>
             <td><%=flight.getPrice()%></td>
+            <td><a href='addFlightToTable.jsp?airlineID=<%=flight.getAirlineID()%>&flightNum=<%=flight.getFlightNum()%>&aircraftID=<%=flight.getAircraftID()%>&isDomestic=<%=flight.isDomestic()%>&departureAirport=<%=flight.getDepartureAirport()%>&departureTime=<%=flight.getDepartureTime()%>&arrivalAirport=<%=flight.getArrivalAirport()%>&arrivalTime=<%=flight.getArrivalTime()%>&price=<%=flight.getPrice()%>&dayOffset=<%=flight.getDayOffset()%>&departureDate=<%=flight.getDepartureDate()%>&departureDay=<%=flight.getDepartureDay()%>'><button>Select</button></a></td>
+
         </tr>
         <%}%>
     </table>
 
 <%}else if (flights!= null && flights.isEmpty()){
-        out.print("<h2>No flights found with these specifications.</h2>");
+        out.print("<h2>No flights found with these specifications. </h2>");
 }
 %>
+<a href='clear-flight.jsp'><button>Restart</button></a>
 
 </body>
 </html>

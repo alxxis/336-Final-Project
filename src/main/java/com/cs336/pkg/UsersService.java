@@ -347,6 +347,24 @@ public class UsersService {
         }
     }
 
+    public boolean hasEnoughSeats(Flight f){
+        String search = "SELECT a.numSeats - COUNT(t.*) AS seatsLeft FROM application.flight f JOIN application.aircraft a ON f.aircraftID = a.aircraftID LEFT JOIN application.ticketinfo t ON f.airlineID = t.airlineID AND f.flightNum = t.flightNum  AND f.flightDate = t.flightDate WHERE f.flightDate = DATE ?  AND f.airlineID = ? AND f.flightNum = ? GROUP BY f.airlineID, f.flightNum, f.flightDate, a.numSeats";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1,f.getDepartureDate().toString());
+            ps.setString(2,f.getAirlineID());
+            ps.setInt(3,f.getFlightNum());
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getInt(1) >=1;
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public List<Flight> getFlights(String previousAirlineID, int previousFlightNum, String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort, String maxPrice, String airline, Time departAfter, Time arriveBefore){
         int minDay = ((dayOfWeek - flexibility - 1 + 7) % 7) + 1;
         int maxDay = ((dayOfWeek - 1 + flexibility) % 7) + 1;
