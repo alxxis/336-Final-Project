@@ -187,6 +187,15 @@
             <td><%=flight.getArrivalAirport()%></td>
             <td><%=flight.getArrivalTime()%></td>
             <td><%=flight.getPrice()%></td>
+            <td>
+                <form action="confirmFlight.jsp" method="post">
+                    <input type="hidden" name="flightID" value="<%=flight.getFlightNum()%>">
+                    <input type="hidden" name="depAirport" value="<%=flight.getDepartureAirport()%>">
+                    <input type="hidden" name="arrivalAirport" value="<%=flight.getArrivalAirport()%>">
+                    <input type="hidden" name="price" value="<%=flight.getPrice()%>">
+                    <button type="submit">Reserve</button>
+                </form>
+            </td>
         </tr>
         <%}%>
     </table>
