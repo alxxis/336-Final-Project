@@ -331,7 +331,23 @@ public class UsersService {
         }
     }
 
-    public List<Flight> getFlights(String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort, String maxPrice, String airline, Time departAfter, Time arriveBefore){
+    public String getArrivalAirport(String airlineId, int flightNum){
+        String search = "SELECT f.arrivalAirport FROM flight f WHERE f.airlineID = ? AND f.flightNum = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1, airlineId);
+            ps.setInt(2, flightNum);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getString(1);
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Flight> getFlights(String previousAirlineID, int previousFlightNum, String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort, String maxPrice, String airline, Time departAfter, Time arriveBefore){
         int minDay = ((dayOfWeek - flexibility - 1 + 7) % 7) + 1;
         int maxDay = ((dayOfWeek - 1 + flexibility) % 7) + 1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
@@ -370,6 +386,7 @@ public class UsersService {
         boolean arrBefore = arriveBefore!=null;
         if(hasMaxPrice) search +="AND f.price <= ? ";
         if(hasAirline) search+="AND f.airlineID = ? ";
+        if (previousAirlineID != null) search += "AND f.departureTime > (SELECT arrivalTime FROM flight WHERE flight.airlineID = ? AND flight.flightNum =  ?)";
         if(depAfter) search+="AND f.departureTime >= ? ";
         if(arrBefore) search+="AND f.arrivalTime <= ? ";
         search+= " " + sortQuery;
@@ -377,23 +394,31 @@ public class UsersService {
         List<Flight> flights = new ArrayList<>();
         try{
             PreparedStatement ps = con.prepareStatement(search);
-
-            ps.setString(paramIndex++, airportID);
-            System.out.println("paramIndex: " + paramIndex + " " + airportID);
+            if (previousAirlineID != null) {
+                ps.setString(paramIndex++, getArrivalAirport(previousAirlineID,previousFlightNum));
+            }
+            else {
+                ps.setString(paramIndex++, airportID);
+            }
+//            System.out.println("paramIndex: " + paramIndex + " " + airportID);
             ps.setInt(paramIndex++,minDay);
-            System.out.println("paramIndex: " + paramIndex + " " + minDay);
+//            System.out.println("paramIndex: " + paramIndex + " " + minDay);
             ps.setInt(paramIndex++,maxDay);
-            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
+//            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
             ps.setInt(paramIndex++,minDay);
-            System.out.println("paramIndex: " + paramIndex + " " + minDay);
+//            System.out.println("paramIndex: " + paramIndex + " " + minDay);
             ps.setInt(paramIndex++,maxDay);
-            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
+//            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
             ps.setInt(paramIndex++,minDay);
-            System.out.println("paramIndex: " + paramIndex + " " + minDay);
+//            System.out.println("paramIndex: " + paramIndex + " " + minDay);
             ps.setInt(paramIndex++,maxDay);
-            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
+//            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
             if (hasMaxPrice) ps.setDouble(paramIndex++,Double.parseDouble(maxPrice));
             if (hasAirline) ps.setString(paramIndex++,airline);
+            if (previousAirlineID != null) {
+                ps.setString(paramIndex++,previousAirlineID);
+                ps.setInt(paramIndex++,previousFlightNum);
+            }
             if (depAfter) ps.setTime(paramIndex++, departAfter);
             if (arrBefore) ps.setTime(paramIndex++,arriveBefore);
             System.out.println(ps);
@@ -420,93 +445,6 @@ public class UsersService {
         return flights;
     }
 
-    public List<Flight> getFlights(String airlineID, int flightNum, int dayOfWeek, int flexibility,LocalDate localDate, String sort, String maxPrice, String airline, Time departAfter, Time arriveBefore){
-        int maxDay = ((dayOfWeek - 1 + flexibility) % 7) + 1;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-        int paramIndex = 1;
-        //sorting flights
-        String sortQuery = "";
-        if(sort!=null){
-            switch(sort){
-                case "priceAsc":
-                    sortQuery = "ORDER BY price ASC";
-                    break;
-                case "priceDesc":
-                    sortQuery = "ORDER BY price DESC";
-                    break;
-                case "takeAsc":
-                    sortQuery = "ORDER BY departureTime ASC";
-                    break;
-                case "takeDesc":
-                    sortQuery = "ORDER BY departureTime DESC";
-                    break;
-                case "landingAsc":
-                    sortQuery = "ORDER BY arrivalTime ASC";
-                    break;
-                case "landingDesc":
-                    sortQuery = "ORDER BY arrivalTime DESC";
-                    break;
-                default:
-                    sortQuery="";
-                    break;
-            }
-        }
-        String search = "SELECT * FROM application.flight f LEFT JOIN application.flightdeparturedays fd USING (airlineID, flightNum) WHERE (f.departureAirport = (SELECT fl.departureAirport FROM flight fl WEHRE fl.airlineID = ? AND fl.flightNum = ? )) AND  f.departureDay = (SELECT fl.departureDay LEFT JOIN fdd USING(fl.airlineID,fl.flightNum) WHERE fl.airlineID = ? AND fl.flightNum = ?))) "; // fd.departureDay BETWEEN (dayOfWeek - (flexibility+1)%7+1) AND (dayOfWeek + flexibility)%7
-        boolean hasMaxPrice = maxPrice!=null && !maxPrice.isEmpty();
-        boolean hasAirline = airline!=null && !airline.isEmpty();
-        boolean depAfter = departAfter!=null;
-        boolean arrBefore = arriveBefore!=null;
-        if(hasMaxPrice) search +="AND f.price <= ? ";
-        if(hasAirline) search+="AND f.airlineID = ? ";
-        if(depAfter) search+="AND f.departureTime >= ? ";
-        if(arrBefore) search+="AND f.arrivalTime <= ? ";
-        search+= " " + sortQuery;
-        System.out.println("final query: " + search);
-        List<Flight> flights = new ArrayList<>();
-        try{
-            PreparedStatement ps = con.prepareStatement(search);
-
-            ps.setString(paramIndex++, airportID);
-            System.out.println("paramIndex: " + paramIndex + " " + airportID);
-            ps.setInt(paramIndex++,minDay);
-            System.out.println("paramIndex: " + paramIndex + " " + minDay);
-            ps.setInt(paramIndex++,maxDay);
-            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
-            ps.setInt(paramIndex++,minDay);
-            System.out.println("paramIndex: " + paramIndex + " " + minDay);
-            ps.setInt(paramIndex++,maxDay);
-            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
-            ps.setInt(paramIndex++,minDay);
-            System.out.println("paramIndex: " + paramIndex + " " + minDay);
-            ps.setInt(paramIndex++,maxDay);
-            System.out.println("paramIndex: " + paramIndex + " " + maxDay);
-            if (hasMaxPrice) ps.setDouble(paramIndex++,Double.parseDouble(maxPrice));
-            if (hasAirline) ps.setString(paramIndex++,airline);
-            if (depAfter) ps.setTime(paramIndex++, departAfter);
-            if (arrBefore) ps.setTime(paramIndex++,arriveBefore);
-            System.out.println(ps);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                String airlineID = rs.getString(1);
-                int flightNum = rs.getInt(2);
-                int aircraftID = rs.getInt(3);
-                boolean isDomestic = rs.getBoolean(4);
-                String departureAirport = rs.getString(5);
-                Time departureTime = rs.getTime(6);
-                String arrivalAirport = rs.getString(7);
-                Time arrivalTime = rs.getTime(8);
-                Double price = rs.getDouble(9);
-                int dayOfset = rs.getInt(10);
-                int departureDay = rs.getInt(11);
-                LocalDate departureDate = LocalDate.parse(getDate(departureDay,dayOfWeek,localDate,flexibility),formatter);
-                Flight flight = new Flight(airlineID,flightNum,aircraftID,isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price,dayOfset,departureDay,departureDate);
-                flights.add(flight);
-            }
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return flights;
-    }
 
 //
 

@@ -76,7 +76,7 @@
         if (landingBeforeRequest != null && !landingBeforeRequest.isEmpty()) {
             landingBefore = Time.valueOf(landingBeforeRequest + ":00");  // Assuming time is in HH:mm format
         }
-        flights = service.getFlights(dep_airport,day,Integer.parseInt(flexibility),localDate, sortParam, maxPrice, airline, takeoffAfter, landingBefore);
+        flights = service.getFlights(null,0,dep_airport,day,Integer.parseInt(flexibility),localDate, sortParam, maxPrice, airline, takeoffAfter, landingBefore);
     }
 
 %>
