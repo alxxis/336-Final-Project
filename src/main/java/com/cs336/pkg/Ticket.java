@@ -5,11 +5,13 @@ public class Ticket {
     private int id;
     private String username;
     private Timestamp purchaseTimestamp;
+    private double price;
 
-    public Ticket(int id, String username, Timestamp purchaseTimestamp) {
+    public Ticket(int id, String username, Timestamp purchaseTimestamp, double price) {
         this.id = id;
         this.username = username;
         this.purchaseTimestamp = purchaseTimestamp;
+        this.price = price;
     }
 
     public int getId() {
@@ -35,4 +37,8 @@ public class Ticket {
     public void setPurchaseTimestamp(Timestamp purchaseTimestamp) {
         this.purchaseTimestamp = purchaseTimestamp;
     }
+
+    public double getPrice() {return price;}
+
+    public void setPrice(double price) {this.price = price;}
 }

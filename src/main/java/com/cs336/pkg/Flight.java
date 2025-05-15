@@ -49,6 +49,11 @@ public class Flight {
 
     }
 
+    public Flight(int flightNum, String airlineID){
+        AirlineID = airlineID;
+        FlightNum = flightNum;
+    }
+
 
     public LocalDate getDepartureDate() {
         return departureDate;

@@ -23,7 +23,10 @@ public class UsersService {
                 "        <li><a href=\"questions.jsp\">Questions</a></li>\n";
 
         if (role.equalsIgnoreCase("admin")){
-            header_base +=  "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n";
+            header_base +=  "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n" +
+                    "        <li><a href=\"sales.jsp\">Sales Report</a></li>\n" +
+                    "        <li><a href=\"viewReservations.jsp\">View Reservations</a></li>\n" +
+                    "        <li><a href=\"viewRevenue.jsp\">View Revenue</a></li>\n";
         }
         else if (role.equalsIgnoreCase("customer_rep")){
             header_base +=  "        <li><a href=\"viewFlights.jsp\">View All Flights</a></li>\n";
@@ -328,6 +331,71 @@ public class UsersService {
             e.printStackTrace();
             return flights;
         }
+    }
+
+    public List<Ticket> getTicketsFromAirFlight(String airlineID, int flightNum){
+        List<Ticket> tickets = new ArrayList<>();
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.tickets.id = application.ticketInfo.ticketID WHERE application.ticketInfo.airlineID = ? AND application.ticketInfo.flightNum = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1, airlineID);
+            ps.setInt(2, flightNum);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int ticketID = rs.getInt("ticketID");
+                String username = rs.getString("username");
+                Timestamp time = rs.getTimestamp("purchaseTimestamp");
+                double price = rs.getDouble("price");
+                Ticket ticket = new Ticket(ticketID, username, time, price);
+                tickets.add(ticket);
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+
+    public List<Ticket> getTickets(String month){
+        List<Ticket> tickets = new ArrayList<>();
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.tickets.id = application.ticketInfo.ticketID WHERE EXTRACT(MONTH FROM application.ticket.purchaseTimestamp) = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1, month);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                int ticketID = rs.getInt("ticketID");
+                double price = rs.getDouble("price");
+                String username = rs.getString("username");
+                Timestamp timestamp = rs.getTimestamp("purchaseTimestamp");
+                Ticket ticket = new Ticket(ticketID, username, timestamp, price);
+                tickets.add(ticket);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+
+    public List<Flight> getFlightsWithKey(String airlineID, int flightNum){
+        List<Flight> flights = new ArrayList<>();
+        String search = "SELECT * FROM application.flight WHERE flightNum= ? AND airlineID = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setInt(1, flightNum);
+            ps.setString(2, airlineID);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                int FN = rs.getInt("flightNum");
+                String AID = rs.getString("airlineID");
+                Flight flight = new Flight(FN, AID);
+                flights.add(flight);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return flights;
     }
 
     public List<Flight> getFlights(String airportID, int dayOfWeek,int flexibility,LocalDate localDate, String sort, String maxPrice, String airline, Time departAfter, Time arriveBefore){
