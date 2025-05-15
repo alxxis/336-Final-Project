@@ -51,7 +51,19 @@
     System.out.println(f);
   }
   if (arrivalAirport.equals(trueDeparture)) {
-    System.out.print("DONE");
+    String ret = (String) session.getAttribute("returnDate");
+    String dep = (String) session.getAttribute("departure");
+    String arr = (String) session.getAttribute("arrival");
+    session.setAttribute("departure",arr);
+    session.setAttribute("arrival",dep);
+
+    if (ret != null) {
+      String url_2 = String.format("searchFlight.jsp?dep_airport=%s&arv_airport=%s&deptDate=%s&arrivalDate=&oneOrRound=oneWay&flexibility=%d&maxPrice=&airline=&takeoffAfter=&landingBefore=", arr, dep, ret, 0);
+      session.setAttribute("returnDate", null);
+      response.sendRedirect(url_2);
+    }else{
+      response.sendRedirect("confirmFlight.jsp");
+    }
   }else {
     response.sendRedirect(url);
   }

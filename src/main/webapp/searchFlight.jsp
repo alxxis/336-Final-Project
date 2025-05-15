@@ -25,7 +25,7 @@
     String dep_airport = request.getParameter("dep_airport");
     String arv_airport = request.getParameter("arv_airport");
     String deptDate = request.getParameter("deptDate");
-    String arrivalDate = request.getParameter("arrivalDate");
+    String returnDate = request.getParameter("returnDate");
     String tripType = request.getParameter("oneOrRound");
     String flexibility = request.getParameter("flexibility");
     String isFlightLeg = request.getParameter("isFlightLeg");
@@ -34,7 +34,7 @@
     String previousAirlineID = request.getParameter("previousAirlineID");
     int previousFlightNum = (request.getParameter("previousFlightNum") == null) ? 0: Integer.parseInt(request.getParameter("previousFlightNum"));
 
-
+    String ret = (String) session.getAttribute("returnDate");
 
     Airport selectedAirport = null;
     Airport selectedArvAirport = null;
@@ -63,6 +63,10 @@
             session.setAttribute("departure",dep_airport);
             session.setAttribute("arrival",arv_airport);
         }
+        if (tripType.equalsIgnoreCase("roundTrip") && ret==null ){
+            session.setAttribute("returnDate",returnDate);
+        }
+
         localDate = LocalDate.parse(deptDate);
         day = LocalDate.parse(deptDate).getDayOfWeek().getValue();
         sortParam = request.getParameter("sort");
@@ -115,8 +119,8 @@
     <label for="deptDate">Departure Date:</label >
     <input type="date" id="deptDate" name="deptDate" value = <%= deptDate!= null ? deptDate : ""%> required>
 
-    <label for="arrivalDate">Arrival Date:</label>
-    <input type="date" id="arrivalDate" name="arrivalDate" value = <%= arrivalDate!= null ? arrivalDate : ""%> required>
+    <label for="returnDate">Return Date:</label>
+    <input type="date" id="returnDate" name="returnDate" value = <%= returnDate!= null ? returnDate : ""%> required>
 
 
     <input type="radio" id="oneWay" name="oneOrRound" value="oneWay" required <%= "oneWay".equals(tripType) ? "checked" : "" %>>

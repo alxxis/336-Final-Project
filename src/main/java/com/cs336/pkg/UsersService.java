@@ -1,6 +1,7 @@
 package com.cs336.pkg;
 
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -53,6 +54,40 @@ public class UsersService {
             e.printStackTrace();
             return null;
 
+        }
+    }
+
+    public int addTicket(String username, Timestamp timestamp){
+        String insert = "INSERT INTO application.ticket (username, purchaseTimestamp) VALUES (?, ?)";
+        try {
+                PreparedStatement ps = con.prepareStatement(insert,Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, username);
+                ps.setTimestamp(2, timestamp);
+                ps.executeUpdate();
+                ResultSet rs = ps.getGeneratedKeys();
+                rs.next();
+                int id = rs.getInt(1);
+                return id;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return -1;
+    }
+
+    public void insertTicketInfo(int id, Double price, String flightClass, String airlineID, int flightNum, int flightNO, Date depDate){
+        String insert = "INSERT INTO application.ticketinfo (ticketID,price,class,airlineID,flightNum,flightNO,depDate) VALUES (?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = con.prepareStatement(insert);
+            ps.setInt(1, id);
+            ps.setDouble(2, price);
+            ps.setString(3, flightClass);
+            ps.setString(4, airlineID);
+            ps.setInt(5, flightNum);
+            ps.setInt(6, flightNO);
+            ps.setDate(7, depDate);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -348,7 +383,7 @@ public class UsersService {
     }
 
     public boolean hasEnoughSeats(Flight f){
-        String search = "SELECT a.numSeats - COUNT(t.*) AS seatsLeft FROM application.flight f JOIN application.aircraft a ON f.aircraftID = a.aircraftID LEFT JOIN application.ticketinfo t ON f.airlineID = t.airlineID AND f.flightNum = t.flightNum  AND f.flightDate = t.flightDate WHERE f.flightDate = DATE ?  AND f.airlineID = ? AND f.flightNum = ? GROUP BY f.airlineID, f.flightNum, f.flightDate, a.numSeats";
+        String search = "SELECT a.numSeats - COUNT(t.ticketID) AS seatsLeft FROM application.flight f JOIN application.aircraft a ON f.aircraftID = a.id LEFT JOIN application.ticketinfo t ON f.airlineID = t.airlineID AND f.flightNum = t.flightNum AND t.depDate = DATE ? WHERE f.airlineID = ? AND f.flightNum = ? GROUP BY f.airlineID, f.flightNum, a.numSeats;";
 
         try {
             PreparedStatement ps = con.prepareStatement(search);
