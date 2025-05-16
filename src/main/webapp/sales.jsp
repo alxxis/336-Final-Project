@@ -16,8 +16,12 @@
 
 <%
     String selectedMonth = request.getParameter("month");
-    UsersService service = new UsersService();
-    List<Ticket> tickets = service.getTickets(selectedMonth);
+    List<Ticket> tickets = new ArrayList<>(); // Declare a list to store tickets.
+
+    if (selectedMonth != null && !selectedMonth.isEmpty()) {
+        UsersService service = new UsersService();
+        tickets = service.getTickets(selectedMonth);  // Fetch tickets for the selected month
+    }
 %>
 <body>
     <form method="get">

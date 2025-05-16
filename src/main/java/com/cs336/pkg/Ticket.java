@@ -6,6 +6,15 @@ public class Ticket {
     private String username;
     private Timestamp purchaseTimestamp;
     private double price;
+    private int flightNumber;
+
+    public Ticket(int id, String username, Timestamp purchaseTimestamp, double price, int flightNumber) {
+        this.id = id;
+        this.username = username;
+        this.purchaseTimestamp = purchaseTimestamp;
+        this.price = price;
+        this.flightNumber = flightNumber;
+    }
 
     public Ticket(int id, String username, Timestamp purchaseTimestamp, double price) {
         this.id = id;
@@ -41,4 +50,6 @@ public class Ticket {
     public double getPrice() {return price;}
 
     public void setPrice(double price) {this.price = price;}
+    public int getFlightNumber() {return flightNumber;}
+    public void setFlightNumber(int flightNumber) {this.flightNumber = flightNumber;}
 }

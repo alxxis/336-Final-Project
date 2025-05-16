@@ -333,9 +333,48 @@ public class UsersService {
         }
     }
 
+    public List<Ticket> getTicketsFromUser(String username){
+        List <Ticket> tickets = new ArrayList<>();
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketinfo ON application.ticket.id = application.ticketinfo.ticketID WHERE application.ticket.username = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1,username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                int ticketID = rs.getInt("ticketID");
+                String username1 = rs.getString("username");
+                Timestamp time = rs.getTimestamp("purchaseTimestamp");
+                double price = rs.getDouble("price");
+                int flightNumber = rs.getInt("flightNum");
+                Ticket ticket = new Ticket(ticketID, username1, time, price, flightNumber);
+                tickets.add(ticket);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+    public ArrayList<Users> getProfitableUser(){
+        String search = "SELECT username, SUM(price) AS total_spent FROM ticket t left join ticketinfo ti on t.id = ti.ticketID  GROUP BY username  ORDER BY total_spent DESC LIMIT 1;";
+        ArrayList<Users> users = new ArrayList<>();
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String user = rs.getString("username");
+                Users newUser = new Users(user);
+                users.add(newUser);
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+
     public List<Ticket> getTicketsFromAirFlight(String airlineID, int flightNum){
         List<Ticket> tickets = new ArrayList<>();
-        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.tickets.id = application.ticketInfo.ticketID WHERE application.ticketInfo.airlineID = ? AND application.ticketInfo.flightNum = ?";
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.ticket.id = application.ticketInfo.ticketID WHERE application.ticketInfo.airlineID = ? AND application.ticketInfo.flightNum = ?";
         try{
             PreparedStatement ps = con.prepareStatement(search);
             ps.setString(1, airlineID);
@@ -357,10 +396,11 @@ public class UsersService {
 
     public List<Ticket> getTickets(String month){
         List<Ticket> tickets = new ArrayList<>();
-        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.tickets.id = application.ticketInfo.ticketID WHERE EXTRACT(MONTH FROM application.ticket.purchaseTimestamp) = ?";
+        int monthNum = getMonthNumber(month);
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.ticket.id = application.ticketInfo.ticketID WHERE EXTRACT(MONTH FROM application.ticket.purchaseTimestamp) = ?";
         try{
             PreparedStatement ps = con.prepareStatement(search);
-            ps.setString(1, month);
+            ps.setInt(1, monthNum);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()){
@@ -376,6 +416,25 @@ public class UsersService {
         }
         return tickets;
     }
+
+    private int getMonthNumber(String monthName) {
+        switch (monthName) {
+            case "January": return 1;
+            case "February": return 2;
+            case "March": return 3;
+            case "April": return 4;
+            case "May": return 5;
+            case "June": return 6;
+            case "July": return 7;
+            case "August": return 8;
+            case "September": return 9;
+            case "October": return 10;
+            case "November": return 11;
+            case "December": return 12;
+            default: return 0;
+        }
+    }
+
 
     public List<Flight> getFlightsWithKey(String airlineID, int flightNum){
         List<Flight> flights = new ArrayList<>();

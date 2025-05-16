@@ -1,8 +1,9 @@
-<%@ page import="com.cs336.pkg.UsersService" %>
+        <%@ page import="com.cs336.pkg.UsersService" %>
 <%@ page import="com.cs336.pkg.Flight" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.cs336.pkg.Airline" %>
-<%@ page import="com.cs336.pkg.Ticket" %><%--
+<%@ page import="com.cs336.pkg.Ticket" %>
+        <%@ page import="java.util.ArrayList" %><%--
   Created by IntelliJ IDEA.
   User: apger
   Date: 5/15/2025
@@ -18,34 +19,51 @@
     <%
         UsersService service = new UsersService();
         String air = request.getParameter("airlineID");
-        String flightStr = request.getParameter("flightNum");
-        if (air == null || flightStr == null || flightStr.isEmpty()) {
-            System.out.println("Error: Missing airlineID or flightNum parameters.");
-            return; // exit the page if parameters are missing
+        String flight = request.getParameter("flightNum");
+        String username = request.getParameter("username");
+
+        List<Ticket> tickets = new ArrayList<>();
+        List<Ticket> tickets2 = new ArrayList<>();
+
+        if (flight != null && !flight.isEmpty()) {
+            try {
+                tickets = service.getTicketsFromAirFlight(air, Integer.parseInt(flight));
+                request.setAttribute("tickets", tickets);
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Invalid flight number format.");
+                e.printStackTrace();
+            } catch (Exception e) {
+                request.setAttribute("error", "An unexpected error occurred.");
+                e.printStackTrace();
+            }
+        } else {
+            request.setAttribute("error", "Please enter a flight number.");
         }
 
-        int flight = 0;
-        try {
-            flight = Integer.parseInt(flightStr);
-        } catch (NumberFormatException e) {
-            System.out.println("Error: Invalid flight number format.");
-            return;
+        if (username != null && !username.isEmpty()) {
+            tickets2 = service.getTicketsFromUser(username);
+            request.setAttribute("tickets2", tickets2);
         }
-        List<Ticket> tickets = service.getTicketsFromAirFlight(air, flight);
-//        List<Flight> flights = service.getFlightsWithKey(request.getParameter(airlineID), request.getParameter(flightNum));
+
         List<Airline> airline = service.getAirlines();
+        request.setAttribute("airline", airline);
+
+        System.out.println("Tickets retrieved: " + tickets.size());
+
     %>
-    <form method="get">
+
+    <form action="viewReservations.jsp"  method="get">
         <label for="airlineID">Airline ID: </label>
         <select name="airlineID" id="airlineID" required>
             <% for (Airline a : airline) { %>
-            <option value="<%= a.getAirlineID() %>">
-                <%= a.getName() %>
+            <option value="<%=a.getAirlineID()%>">
+                <%=a.getName()%>
             </option>
             <% } %>
         </select>
         <label for="flightNum">Flight Number: </label>
         <input type="number" id="flightNum" name="flightNum">
+        <button type="submit">Submit</button>
     </form>
 
     <table>
@@ -53,24 +71,31 @@
             <td>Ticket ID</td>
             <td>Username</td>
         </tr>
-        <%for(Ticket t: tickets){%>
+        <%for (Ticket t : tickets) {%>
         <tr>
-            <td><%= t.getUsername()%>
-            <td><%=t.getId()%></td>
+            <td><%=t.getId()%>
+            <td><%=t.getUsername()%></td>
         </tr>
         <%}%>
     </table>
 
+    <form action="viewReservations.jsp"  method="get">
+        <label for="username">Username: </label>
+        <input type="text" id="username" name="username">
+        <button type="submit">Submit</button>
+    </form>
 
     <table>
         <tr>
-            <td>ReservationID</td>
+            <td>Username</td>
+            <td>TicketID</td>
+            <td>Flight Number</td>
         </tr>
-        <%for(Ticket t: tickets){%>
+        <%for (Ticket t : tickets2) {%>
         <tr>
-            <td><%= t.getUsername()%>
+            <td><%=t.getUsername()%>
             <td><%=t.getId()%></td>
-            <td><%=t.getPrice()%></td>
+            <td><%=t.getFlightNumber()%></td>
         </tr>
         <%}%>
     </table>
