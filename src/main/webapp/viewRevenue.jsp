@@ -30,7 +30,7 @@
         <%for(Ticket t : tickets){%>
         <tr>
             <td><%=t.getAirlineID()%></td>
-            <td><%=t.getFlightNumber()%></td>
+            <td><%=t.getFlightNum()%></td>
         </tr>
             <%}%>
     </table>

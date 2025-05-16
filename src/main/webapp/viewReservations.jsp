@@ -95,7 +95,7 @@
         <tr>
             <td><%=t.getUsername()%>
             <td><%=t.getId()%></td>
-            <td><%=t.getFlightNumber()%></td>
+            <td><%=t.getFlightNum()%></td>
         </tr>
         <%}%>
     </table>
