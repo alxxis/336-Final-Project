@@ -1,9 +1,6 @@
-        <%@ page import="com.cs336.pkg.UsersService" %>
-<%@ page import="com.cs336.pkg.Flight" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.cs336.pkg.Airline" %>
-<%@ page import="com.cs336.pkg.Ticket" %>
-        <%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.cs336.pkg.*" %><%--
   Created by IntelliJ IDEA.
   User: apger
   Date: 5/15/2025
@@ -14,10 +11,13 @@
 <html>
 <head>
     <title>View Reservations</title>
+    <%
+        Users curUser = (Users)session.getAttribute("currentUser");
+        UsersService service = new UsersService();
+        out.print(service.getHeader(curUser.getRole()));%>
 </head>
 <body>
     <%
-        UsersService service = new UsersService();
         String air = request.getParameter("airlineID");
         String flight = request.getParameter("flightNum");
         String username = request.getParameter("username");

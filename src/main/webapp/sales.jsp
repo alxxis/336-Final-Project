@@ -1,7 +1,8 @@
 <%@ page import="com.cs336.pkg.UsersService" %>
 <%@ page import="com.cs336.pkg.Ticket" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="com.cs336.pkg.Users" %><%--
   Created by IntelliJ IDEA.
   User: apger
   Date: 5/15/2025
@@ -12,6 +13,10 @@
 <html>
 <head>
     <title>Sales Report</title>
+    <%
+        Users curUser = (Users)session.getAttribute("currentUser");
+        UsersService service = new UsersService();
+        out.print(service.getHeader(curUser.getRole()));%>
 </head>
 
 <%
@@ -19,7 +24,6 @@
     List<Ticket> tickets = new ArrayList<>(); // Declare a list to store tickets.
 
     if (selectedMonth != null && !selectedMonth.isEmpty()) {
-        UsersService service = new UsersService();
         tickets = service.getTickets(selectedMonth);  // Fetch tickets for the selected month
     }
 %>

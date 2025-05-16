@@ -27,7 +27,7 @@
     </style>
     <%
         Users curUser = (Users)session.getAttribute("currentUser");
-        out.print(service.getHeader(curUser.getRole()));%>%>
+        out.print(service.getHeader(curUser.getRole()));%>
 </head>
 <body>
 <%

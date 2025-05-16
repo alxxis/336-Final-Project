@@ -528,6 +528,40 @@ public class UsersService {
         }
         return tickets;
     }
+
+    public Double getUserRevenue(String username){
+        String search = "SELECT SUM(price) AS total_spent FROM ticket t left join ticketinfo ti on t.id = ti.ticketID  WHERE t.username = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1,username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                return rs.getDouble("total_spent");
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Double getFlightRevenue(String airlineID){
+        String search = "SELECT SUM(price) AS total_spent FROM ticketinfo ti   GROUP BY flightNum,airlineID WHERE ticket.airlineID = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1,airlineID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                return rs.getDouble("total_spent");
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     public ArrayList<Users> getProfitableUser(){
         String search = "SELECT username, SUM(price) AS total_spent FROM ticket t left join ticketinfo ti on t.id = ti.ticketID  GROUP BY username  ORDER BY total_spent DESC LIMIT 1;";
         ArrayList<Users> users = new ArrayList<>();

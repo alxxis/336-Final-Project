@@ -14,10 +14,13 @@
 <html>
 <head>
     <title>View Revenue</title>
+    <%
+        Users curUser = (Users)session.getAttribute("currentUser");
+        UsersService service = new UsersService();
+        out.print(service.getHeader(curUser.getRole()));%>
 </head>
 <body>
     <%
-    UsersService service = new UsersService();
     ArrayList<Users> users = service.getProfitableUser();
     ArrayList<Ticket> tickets = service.getProfitableTickets();
 %>
@@ -33,6 +36,78 @@
             <td><%=t.getFlightNum()%></td>
         </tr>
             <%}%>
+    </table>
+
+
+
+
+    <%
+        String air = request.getParameter("airlineID");
+        String username = request.getParameter("username");
+
+
+
+        List<Airline> airline = null;
+
+        if (request.getMethod().equalsIgnoreCase("get")) {
+            airline = service.getAirlines();
+            request.setAttribute("airline", airline);
+        }
+
+
+
+
+
+    %>
+
+
+
+
+
+    <form method="get">
+        <label for="airlineID">Airline ID: </label>
+        <select name="airlineID" id="airlineID" required>
+            <% if (airline!= null) for (Airline a : airline) { %>
+            <option value="<%=a.getAirlineID()%>">
+                <%=a.getName()%>
+            </option>
+            <% } %>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+
+    <table>
+        <tr>
+            <td>Ticket ID</td>
+            <td>Username</td>
+        </tr>
+        <%for (Ticket t : tickets) {%>
+        <tr>
+            <td><%=t.getId()%>
+            <td><%=t.getUsername()%></td>
+        </tr>
+        <%}%>
+    </table>
+
+    <form method="get">
+        <label for="username">Username: </label>
+        <input type="text" id="username" name="username">
+        <button type="submit">Submit</button>
+    </form>
+
+    <table>
+        <tr>
+            <td>Username</td>
+            <td>TicketID</td>
+            <td>Flight Number</td>
+        </tr>
+        <%for (Ticket t : tickets2) {%>
+        <tr>
+            <td><%=t.getUsername()%>
+            <td><%=t.getId()%></td>
+            <td><%=t.getFlightNum()%></td>
+        </tr>
+        <%}%>
     </table>
 
 </body>
