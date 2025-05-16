@@ -15,10 +15,7 @@
     <list default="true" id="4a043a75-9c73-4b56-b9f1-4d2ae0593f5e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Ticket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Ticket.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/Users.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cs336/pkg/UsersService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/sales.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/sales.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/viewReservations.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/viewReservations.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/viewRevenue.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/viewRevenue.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -240,7 +237,7 @@
       <workItem from="1747006437347" duration="3899000" />
       <workItem from="1747088384359" duration="14414000" />
       <workItem from="1747278426181" duration="4480000" />
-      <workItem from="1747322737918" duration="24038000" />
+      <workItem from="1747322737918" duration="25522000" />
     </task>
     <servers />
   </component>

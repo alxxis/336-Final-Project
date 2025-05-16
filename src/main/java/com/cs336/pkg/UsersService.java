@@ -371,6 +371,23 @@ public class UsersService {
         return users;
     }
 
+    public ArrayList<Ticket> getProfitableTickets(){
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        String search = "SELECT airlineID,flightNum, SUM(price) AS total_spent FROM ticketinfo ti   GROUP BY flightNum,airlineID ORDER BY  total_spent DESC LIMIT 3;";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String airlineID = rs.getString("airlineID");
+                int flightNum = rs.getInt("flightNum");
+                Ticket ticket = new Ticket(flightNum, airlineID);
+                tickets.add(ticket);
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
 
     public List<Ticket> getTicketsFromAirFlight(String airlineID, int flightNum){
         List<Ticket> tickets = new ArrayList<>();

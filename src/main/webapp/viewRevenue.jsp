@@ -19,11 +19,21 @@
     <%
     UsersService service = new UsersService();
     ArrayList<Users> users = service.getProfitableUser();
+    ArrayList<Ticket> tickets = service.getProfitableTickets();
 %>
     <p>Most Profitable Customer:</p>
     <%for(Users user : users){%>
     <p><%=user.getUsername()%></p>
     <%}%>
     <p>Most active Flights:</p>
+    <table>
+        <%for(Ticket t : tickets){%>
+        <tr>
+            <td><%=t.getAirlineID()%></td>
+            <td><%=t.getFlightNumber()%></td>
+        </tr>
+            <%}%>
+    </table>
+
 </body>
 </html>
