@@ -26,6 +26,14 @@ public class Ticket {
         this.depDate = depDate;
     }
 
+    public Ticket (int ticketID, String username1, Timestamp time, Double price , int flightNumber){
+        this.id=ticketID;
+        this.username = username1;
+        this.purchaseTimestamp = time;
+        this.price = price;
+        this.flightNum = flightNumber;
+    }
+
 
     public double getPrice() {
         return price;
@@ -81,7 +89,22 @@ public class Ticket {
 
     public void setDepDate(Date depDate) {
         this.depDate = depDate;
+        this.price = price;
+        this.flightNum= flightNum;
     }
+
+    public Ticket(int id, String username, Timestamp purchaseTimestamp, double price) {
+        this.id = id;
+        this.username = username;
+        this.purchaseTimestamp = purchaseTimestamp;
+        this.price = price;
+    }
+
+    public Ticket(int flightNumber, String airlineID){
+        this.flightNum = flightNumber;
+        this.airlineID = airlineID;
+    }
+
 
     public int getId() {
         return id;

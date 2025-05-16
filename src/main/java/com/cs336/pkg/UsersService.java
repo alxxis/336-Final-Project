@@ -28,7 +28,10 @@ public class UsersService {
 
 
         if (role.equalsIgnoreCase("admin")){
-            header_base +=  "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n";
+            header_base +=  "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n" +
+                    "        <li><a href=\"sales.jsp\">Sales Report</a></li>\n" +
+                    "        <li><a href=\"viewReservations.jsp\">View Reservations</a></li>\n" +
+                    "        <li><a href=\"viewRevenue.jsp\">View Revenue</a></li>\n";
         }
         else if (role.equalsIgnoreCase("customer_rep")){
             header_base +=  "        <li><a href=\"viewFlights.jsp\">View All Flights</a></li>\n";
@@ -342,8 +345,6 @@ public class UsersService {
         return replies;
     }
 
-
-
     public void addReply(String author, int qID, String messageContent, String timestamp){
         String insert = "INSERT INTO application.replies (author, qID, messageContent, messageTimestamp) VALUES (?,?,?,?)";
         try{
@@ -504,6 +505,147 @@ public class UsersService {
             e.printStackTrace();
             return flights;
         }
+    }
+
+    public List<Ticket> getTicketsFromUser(String username){
+        List <Ticket> tickets = new ArrayList<>();
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketinfo ON application.ticket.id = application.ticketinfo.ticketID WHERE application.ticket.username = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1,username);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                int ticketID = rs.getInt("ticketID");
+                String username1 = rs.getString("username");
+                Timestamp time = rs.getTimestamp("purchaseTimestamp");
+                double price = rs.getDouble("price");
+                int flightNumber = rs.getInt("flightNum");
+                Ticket ticket = new Ticket(ticketID, username1, time, price, flightNumber);
+                tickets.add(ticket);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+    public ArrayList<Users> getProfitableUser(){
+        String search = "SELECT username, SUM(price) AS total_spent FROM ticket t left join ticketinfo ti on t.id = ti.ticketID  GROUP BY username  ORDER BY total_spent DESC LIMIT 1;";
+        ArrayList<Users> users = new ArrayList<>();
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String user = rs.getString("username");
+                Users newUser = new Users(user);
+                users.add(newUser);
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    public ArrayList<Ticket> getProfitableTickets(){
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        String search = "SELECT airlineID,flightNum, SUM(price) AS total_spent FROM ticketinfo ti   GROUP BY flightNum,airlineID ORDER BY  total_spent DESC LIMIT 3;";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String airlineID = rs.getString("airlineID");
+                int flightNum = rs.getInt("flightNum");
+                Ticket ticket = new Ticket(flightNum, airlineID);
+                tickets.add(ticket);
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+
+    public List<Ticket> getTicketsFromAirFlight(String airlineID, int flightNum){
+        List<Ticket> tickets = new ArrayList<>();
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.ticket.id = application.ticketInfo.ticketID WHERE application.ticketInfo.airlineID = ? AND application.ticketInfo.flightNum = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1, airlineID);
+            ps.setInt(2, flightNum);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                int ticketID = rs.getInt("ticketID");
+                String username = rs.getString("username");
+                Timestamp time = rs.getTimestamp("purchaseTimestamp");
+                double price = rs.getDouble("price");
+                Ticket ticket = new Ticket(ticketID, username, time, price);
+                tickets.add(ticket);
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+
+    public List<Ticket> getTickets(String month){
+        List<Ticket> tickets = new ArrayList<>();
+        int monthNum = getMonthNumber(month);
+        String search = "SELECT * FROM application.ticket LEFT JOIN application.ticketInfo ON application.ticket.id = application.ticketInfo.ticketID WHERE EXTRACT(MONTH FROM application.ticket.purchaseTimestamp) = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setInt(1, monthNum);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                int ticketID = rs.getInt("ticketID");
+                double price = rs.getDouble("price");
+                String username = rs.getString("username");
+                Timestamp timestamp = rs.getTimestamp("purchaseTimestamp");
+                Ticket ticket = new Ticket(ticketID, username, timestamp, price);
+                tickets.add(ticket);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return tickets;
+    }
+
+    private int getMonthNumber(String monthName) {
+        switch (monthName) {
+            case "January": return 1;
+            case "February": return 2;
+            case "March": return 3;
+            case "April": return 4;
+            case "May": return 5;
+            case "June": return 6;
+            case "July": return 7;
+            case "August": return 8;
+            case "September": return 9;
+            case "October": return 10;
+            case "November": return 11;
+            case "December": return 12;
+            default: return 0;
+        }
+    }
+
+
+    public List<Flight> getFlightsWithKey(String airlineID, int flightNum){
+        List<Flight> flights = new ArrayList<>();
+        String search = "SELECT * FROM application.flight WHERE flightNum= ? AND airlineID = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setInt(1, flightNum);
+            ps.setString(2, airlineID);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                int FN = rs.getInt("flightNum");
+                String AID = rs.getString("airlineID");
+                Flight flight = new Flight(FN, AID);
+                flights.add(flight);
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return flights;
     }
 
     public String getArrivalAirport(String airlineId, int flightNum){
