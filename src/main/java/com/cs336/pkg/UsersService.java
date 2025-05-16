@@ -22,7 +22,10 @@ public class UsersService {
         String header_base = "<ul>\n" +
                 "        <li><a href=\"HelloUser.jsp\">Dashboard</a></li>\n" +
                 "        <li><a href=\"searchFlight.jsp\">Search Flights</a></li>\n" +
-                "        <li><a href=\"questions.jsp\">Questions</a></li>\n";
+                "        <li><a href=\"questions.jsp\">Questions</a></li>\n"+
+                "        <li><a href=\"waitlist.jsp\">View Reservations</a></li>\n"+
+                "        <li><a href=\"tickets.jsp\">View Tickets</a></li>\n" ;
+
 
         if (role.equalsIgnoreCase("admin")){
             header_base +=  "        <li><a href=\"viewUsers.jsp\">View Users</a></li>\n";
@@ -74,6 +77,99 @@ public class UsersService {
         return -1;
     }
 
+    public int addReservation(String username, Timestamp timestamp){
+        String insert = "INSERT INTO application.reservation (username, reservationTimestamp) VALUES (?, ?)";
+        try {
+            PreparedStatement ps = con.prepareStatement(insert,Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, username);
+            ps.setTimestamp(2, timestamp);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            int id = rs.getInt(1);
+            return id;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return -1;
+    }
+
+    public List<Ticket> getFutureTickets(String username){
+        String select = "SELECT ticketID,username,purchaseTimestamp,f.price,class,f.airlineID,f.flightNum,aircraftID,flightNO,depDate FROM ticketinfo ti join ticket t on ti.ticketID = t.id  LEFT JOIN flight f ON f.airlineID= ti.airlineID AND f.flightNum = ti.flightNum WHERE ? <= ALL( SELECT depdate FROM ticketinfo where ticketinfo.ticketID= ti.ticketID ) AND t.username = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setString(2, username);
+            ps.setString(1, Date.valueOf(LocalDate.now()).toString());
+            ResultSet rs = ps.executeQuery();
+            List<Ticket> tickets = new ArrayList<>();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                Timestamp purchaseTimestamp = rs.getTimestamp(3);
+                Double price = rs.getDouble(4);
+                String className = rs.getString(5);
+                String airlineID = rs.getString(6);
+                int flightNum = rs.getInt(7);
+                int flightNO = rs.getInt(9);
+                Date depDate = rs.getDate(10);
+                Ticket ticket = new Ticket(id,username,purchaseTimestamp,price,className,airlineID,flightNum,flightNO,depDate);
+                tickets.add(ticket);
+            }
+            return tickets;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Ticket> getpastTickets(String username){
+        String select = "SELECT ticketID,username,purchaseTimestamp,f.price,class,f.airlineID,f.flightNum,aircraftID,flightNO,depDate FROM ticketinfo ti join ticket t on ti.ticketID = t.id  LEFT JOIN flight f ON f.airlineID= ti.airlineID AND f.flightNum = ti.flightNum WHERE ? > ALL( SELECT depdate FROM ticketinfo where ticketinfo.ticketID= ti.ticketID ) AND t.username = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setString(1, Date.valueOf(LocalDate.now()).toString());
+            ps.setString(2, username);
+            ResultSet rs = ps.executeQuery();
+            List<Ticket> tickets = new ArrayList<>();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                Timestamp purchaseTimestamp = rs.getTimestamp(3);
+                Double price = rs.getDouble(4);
+                String className = rs.getString(5);
+                String airlineID = rs.getString(6);
+                int flightNum = rs.getInt(7);
+                int flightNO = rs.getInt(9);
+                Date depDate = rs.getDate(10);
+                Ticket ticket = new Ticket(id,username,purchaseTimestamp,price,className,airlineID,flightNum,flightNO,depDate);
+                tickets.add(ticket);
+            }
+            return tickets;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteTicket(int id){
+        String delete = "DELETE FROM ticket WHERE id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(delete);
+            ps.setInt(1,id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteReservation(int id){
+        String delete = "DELETE FROM reservation WHERE id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(delete);
+            ps.setInt(1,id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void insertTicketInfo(int id, Double price, String flightClass, String airlineID, int flightNum, int flightNO, Date depDate){
         String insert = "INSERT INTO application.ticketinfo (ticketID,price,class,airlineID,flightNum,flightNO,depDate) VALUES (?,?,?,?,?,?,?)";
         try {
@@ -86,6 +182,48 @@ public class UsersService {
             ps.setInt(6, flightNO);
             ps.setDate(7, depDate);
             ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void insertReservationInfo(int id, Double price, String flightClass, String airlineID, int flightNum, int flightNO, Date depDate){
+        String insert = "INSERT INTO application.reservationinfo (reservationid,price,class,airlineID,flightNum,flightNO,depDate) VALUES (?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = con.prepareStatement(insert);
+            ps.setInt(1, id);
+            ps.setDouble(2, price);
+            ps.setString(3, flightClass);
+            ps.setString(4, airlineID);
+            ps.setInt(5, flightNum);
+            ps.setInt(6, flightNO);
+            ps.setDate(7, depDate);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<Ticket> getReservations(String username){
+        String search = "SELECT * FROM reservation LEFT JOIN reservationinfo on reservation.id = reservationinfo.reservationid WHERE username = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            ArrayList<Ticket> tickets = new ArrayList<>();
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                Timestamp purchaseTimestamp = rs.getTimestamp(3);
+                Double price = rs.getDouble(5);
+                String className = rs.getString(6);
+                String airlineID = rs.getString(7);
+                int flightNum = rs.getInt(8);
+                int flightNO = rs.getInt(9);
+                Date depDate = rs.getDate(10);
+                Ticket ticket = new Ticket(id,username,purchaseTimestamp,price,className,airlineID,flightNum,flightNO,depDate);
+                tickets.add(ticket);
+            }
+            return tickets;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -203,6 +341,8 @@ public class UsersService {
         }
         return replies;
     }
+
+
 
     public void addReply(String author, int qID, String messageContent, String timestamp){
         String insert = "INSERT INTO application.replies (author, qID, messageContent, messageTimestamp) VALUES (?,?,?,?)";
@@ -382,8 +522,50 @@ public class UsersService {
         }
     }
 
+    public ArrayList<Flight> getFlight(int reservationID){
+        ArrayList<Flight> flights = new ArrayList<>();
+        String search = "SELECT * FROM reservation right join application.reservationinfo r on reservation.id = r.reservationid right join flight using (airlineID,flightNum) WHERE reservationid = ?";
+        try{
+            PreparedStatement ps = con.prepareStatement(search);
+            ps.setInt(1, reservationID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String airlineID = rs.getString(1);
+                int flightNum = rs.getInt(2);
+                int aircraftID = rs.getInt(3);
+                boolean isDomestic = rs.getBoolean(4);
+                String departureAirport = rs.getString(5);
+                Time departureTime = rs.getTime(6);
+                String arrivalAirport = rs.getString(7);
+                Time arrivalTime = rs.getTime(8);
+                Double price = rs.getDouble(9);
+                int dayOfset = rs.getInt(10);
+                int departureDay = rs.getInt(11);
+                Date departureDate = rs.getDate(15);
+                Flight f = new Flight(airlineID,flightNum,aircraftID,isDomestic,departureAirport,departureTime,arrivalAirport,arrivalTime,price,dayOfset,departureDay, LocalDate.parse(departureDate.toString()));
+                flights.add(f);
+
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return flights;
+    }
+
+    public boolean canBookReservation(int reservationID){
+        ArrayList<Flight> flights = getFlight(reservationID);
+
+        for (Flight flight : flights){
+            if (!hasEnoughSeats(flight)){
+                return false;
+            }
+        }
+        return true;
+
+    }
+
     public boolean hasEnoughSeats(Flight f){
-        String search = "SELECT a.numSeats - COUNT(t.ticketID) AS seatsLeft FROM application.flight f JOIN application.aircraft a ON f.aircraftID = a.id LEFT JOIN application.ticketinfo t ON f.airlineID = t.airlineID AND f.flightNum = t.flightNum AND t.depDate = DATE ? WHERE f.airlineID = ? AND f.flightNum = ? GROUP BY f.airlineID, f.flightNum, a.numSeats;";
+        String search = "SELECT a.numSeats - COUNT(t.ticketID) AS seatsLeft FROM application.flight f JOIN application.aircraft a ON f.aircraftID = a.id LEFT JOIN application.ticketinfo t ON f.airlineID = t.airlineID AND f.flightNum = t.flightNum AND t.depDate = DATE ? WHERE f.airlineID = ? AND f.flightNum = ? GROUP BY f.airlineID, f.flightNum, a.numSeats";
 
         try {
             PreparedStatement ps = con.prepareStatement(search);

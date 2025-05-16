@@ -40,10 +40,10 @@
     <label for="class">Class:</label>
 
 
-<%--    <form action="waitlist.jsp" method="post">--%>
+<%--    <form action="add-to-waitlist.jsp" method="post">--%>
 <%--        <button type="submit">waitlist</button>--%>
 <%--    </form>--%>
-    <form action=<%=needsReservation == false ? "add-ticket.jsp" : "waitlist.jsp"%> method="post">
+    <form action=<%=needsReservation == false ? "add-ticket.jsp" : "add-to-waitlist.jsp"%> method="post">
         <select name="class" id="class" required>
             <option value="economy">Economy</option>
             <option value="business">Business</option>
